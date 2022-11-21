@@ -18,8 +18,8 @@ For local testing run `cid api` and set `CID_API_ADDR` to `http://localhost:7400
 
 ```golang
 // sdk
-sdk, _ := NewSDK()
-currentModule, _ := sdk.CurrentModule()
+cid, _ := cidsdk.NewSDK()
+currentModule, _ := cid.CurrentModule()
 ```
 
 ## License

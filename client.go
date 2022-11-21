@@ -1,4 +1,4 @@
-package sdk
+package cidsdk
 
 import (
 	"context"
