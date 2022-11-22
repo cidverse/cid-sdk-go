@@ -42,7 +42,7 @@ type ProjectInfoResponse struct {
 	UserDisplayName *string `json:"user_display_name,omitempty"`
 
 	// UserGroupId group id
-	UserGroupId *string `json:"user_group-id,omitempty"`
+	UserGroupId *string `json:"user_group_id,omitempty"`
 
 	// UserId user id
 	UserId *string `json:"user_id,omitempty"`
@@ -94,13 +94,13 @@ type ModuleCurrentResponse ProjectModule
 // ExecuteCommandRequest defines model for ExecuteCommandRequest.
 type ExecuteCommandRequest struct {
 	// CaptureOutput capture and return the output (stdout and stderr will be passed thru if not set)
-	CaptureOutput *bool `json:"capture-output,omitempty"`
+	CaptureOutput *bool `json:"capture_output,omitempty"`
 
 	// Command command
 	Command *string `json:"command,omitempty"`
 
 	// WorkDir directory to execute the command in (default = project root)
-	WorkDir *string `json:"work-dir,omitempty"`
+	WorkDir *string `json:"work_dir,omitempty"`
 }
 
 // ExecuteCommandResponse defines model for ExecuteCommandResponse.
