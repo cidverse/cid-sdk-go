@@ -2,6 +2,7 @@ package cidsdk
 
 import (
 	"strconv"
+	"time"
 )
 
 // APIError defines model for Error.
@@ -90,6 +91,54 @@ type ProjectModule struct {
 type ModuleListResponse []ProjectModule
 
 type ModuleCurrentResponse ProjectModule
+
+type VCSCommitListResponse []VCSCommit
+
+type VCSCommit struct {
+	HashShort   string       `json:"hash_short,omitempty"`
+	Hash        string       `json:"hash,omitempty"`
+	Message     string       `json:"message,omitempty"`
+	Description string       `json:"description,omitempty"`
+	Author      VCSAuthor    `json:"author,omitempty"`
+	Comitter    VCSAuthor    `json:"committer,omitempty"`
+	Tags        *[]VCSTag    `json:"tags,omitempty"`
+	AuthoredAt  time.Time    `json:"authored_at,omitempty"`
+	CommittedAt time.Time    `json:"committed_at,omitempty"`
+	Changes     *[]VCSChange `json:"changes,omitempty"`
+}
+
+type VCSAuthor struct {
+	Name  string `json:"name,omitempty"`
+	Email string `json:"email,omitempty"`
+}
+
+type VCSTagListResponse []VCSTag
+
+type VCSTag struct {
+	RefType string `json:"type,omitempty"`
+	Value   string `json:"value,omitempty"`
+	Hash    string `json:"hash,omitempty"`
+}
+
+type VCSReleaseListResponse []VCSRelease
+
+type VCSRelease struct {
+	Version string `json:"version,omitempty"`
+	Ref     VCSTag `json:"ref,omitempty"`
+}
+
+type VCSChange struct {
+	ChangeType string  `json:"type,omitempty"`
+	FileFrom   VCSFile `json:"file_from,omitempty"`
+	FileTo     VCSFile `json:"file_to,omitempty"`
+	Patch      string  `json:"patch,omitempty"`
+}
+
+type VCSFile struct {
+	Name string `json:"name,omitempty"`
+	Size int    `json:"size,omitempty"`
+	Hash string `json:"hash,omitempty"`
+}
 
 // ExecuteCommandRequest defines model for ExecuteCommandRequest.
 type ExecuteCommandRequest struct {

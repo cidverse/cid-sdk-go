@@ -8,6 +8,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 )
 
@@ -134,6 +135,74 @@ func (sdk SDK) CurrentModule() (*ModuleCurrentResponse, error) {
 		return nil, err
 	} else if resp.IsSuccess() {
 		return resp.Result().(*ModuleCurrentResponse), nil
+	} else {
+		return nil, resp.Error().(*APIError)
+	}
+}
+
+// VCSCommits request
+func (sdk SDK) VCSCommits(changes bool, limit int) (*VCSCommitListResponse, error) {
+	resp, err := sdk.client.R().
+		SetHeader("Accept", "application/json").
+		SetResult(&VCSCommitListResponse{}).
+		SetError(&APIError{}).
+		Get("/vcs/commit?changes=" + strconv.FormatBool(changes) + "&limit=" + strconv.Itoa(limit))
+
+	if err != nil {
+		return nil, err
+	} else if resp.IsSuccess() {
+		return resp.Result().(*VCSCommitListResponse), nil
+	} else {
+		return nil, resp.Error().(*APIError)
+	}
+}
+
+// VCSCommitByHash request
+func (sdk SDK) VCSCommitByHash(hash string, changes bool) (*VCSCommit, error) {
+	resp, err := sdk.client.R().
+		SetHeader("Accept", "application/json").
+		SetResult(&VCSCommit{}).
+		SetError(&APIError{}).
+		Get("/vcs/commit/" + hash + "?changes=" + strconv.FormatBool(changes))
+
+	if err != nil {
+		return nil, err
+	} else if resp.IsSuccess() {
+		return resp.Result().(*VCSCommit), nil
+	} else {
+		return nil, resp.Error().(*APIError)
+	}
+}
+
+// VCSTags request
+func (sdk SDK) VCSTags() (*VCSTagListResponse, error) {
+	resp, err := sdk.client.R().
+		SetHeader("Accept", "application/json").
+		SetResult(&VCSTagListResponse{}).
+		SetError(&APIError{}).
+		Get("/vcs/tag")
+
+	if err != nil {
+		return nil, err
+	} else if resp.IsSuccess() {
+		return resp.Result().(*VCSTagListResponse), nil
+	} else {
+		return nil, resp.Error().(*APIError)
+	}
+}
+
+// VCSReleases request
+func (sdk SDK) VCSReleases() (*VCSReleaseListResponse, error) {
+	resp, err := sdk.client.R().
+		SetHeader("Accept", "application/json").
+		SetResult(&VCSReleaseListResponse{}).
+		SetError(&APIError{}).
+		Get("/vcs/release")
+
+	if err != nil {
+		return nil, err
+	} else if resp.IsSuccess() {
+		return resp.Result().(*VCSReleaseListResponse), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
