@@ -7,13 +7,18 @@ import (
 
 // APIError defines model for Error.
 type APIError struct {
-	Detail *string `json:"detail,omitempty"`
-	Status *int    `json:"status,omitempty"`
-	Title  *string `json:"title,omitempty"`
+	Detail string `json:"detail,omitempty"`
+	Status int    `json:"status,omitempty"`
+	Title  string `json:"title,omitempty"`
 }
 
 func (e *APIError) Error() string {
-	return strconv.Itoa(*e.Status) + ": " + *e.Title
+	return strconv.Itoa(e.Status) + ": " + e.Title
+}
+
+// Action is the common interface for all actions
+type Action interface {
+	Execute() error
 }
 
 // HealthcheckResponse defines model for HealthcheckResponse.
@@ -21,59 +26,61 @@ type HealthcheckResponse struct {
 	Status string `json:"status"`
 }
 
-// ProjectDependency defines model for ProjectDependency.
-type ProjectDependency struct {
-	Id      *string `json:"id,omitempty"`
-	Type    *string `json:"type,omitempty"`
-	Version *string `json:"version,omitempty"`
+type ActionEnv struct {
+	Module ProjectModule
+	Config CurrentConfig
 }
 
-// ProjectEnvResponse defines model for ProjectEnvResponse.
-type ProjectEnvResponse map[string]string
+// ProjectDependency defines model for ProjectDependency.
+type ProjectDependency struct {
+	Id      string `json:"id,omitempty"`
+	Type    string `json:"type,omitempty"`
+	Version string `json:"version,omitempty"`
+}
 
-// ProjectInfoResponse defines model for ProjectInfoResponse.
-type ProjectInfoResponse struct {
-	// ProjectDir project root directory
-	ProjectDir *string `json:"project_dir,omitempty"`
+// CurrentConfig defines model for CurrentConfig.
+type CurrentConfig struct {
+	Debug        bool              `json:"debug,omitempty"`
+	Log          map[string]string `json:"log,omitempty"`
+	TempDir      string            `json:"temp_dir,omitempty"`
+	ArtifactDir  string            `json:"artifact_dir,omitempty"`
+	HostName     string            `json:"host_name,omitempty"`
+	HostUserId   string            `json:"host_user_id,omitempty"`
+	HostUserName string            `json:"host_user_name,omitempty"`
+	HostGroupId  string            `json:"host_group_id,omitempty"`
+	Config       string            `json:"config,omitempty"`
+}
 
-	// WorkDir current working directory
-	WorkDir *string `json:"work_dir,omitempty"`
+func (c CurrentConfig) DebugFlag(id string, flag string) string {
+	if c.Debug || c.Log[id] == "debug" {
+		return flag
+	}
 
-	// UserDisplayName display name of the current user
-	UserDisplayName *string `json:"user_display_name,omitempty"`
-
-	// UserGroupId group id
-	UserGroupId *string `json:"user_group_id,omitempty"`
-
-	// UserId user id
-	UserId *string `json:"user_id,omitempty"`
-
-	// UserLoginName login name of the current user
-	UserLoginName *string `json:"user_login_name,omitempty"`
+	return ""
 }
 
 // ProjectModule defines model for ProjectModule.
 type ProjectModule struct {
 	// ProjectDir project root directory
-	ProjectDir *string `json:"project_dir,omitempty"`
+	ProjectDir string `json:"project_dir,omitempty"`
 
 	// ModuleDir module root directory
-	ModuleDir *string `json:"module_dir,omitempty"`
+	ModuleDir string `json:"module_dir,omitempty"`
 
 	// Discovery module detected based on
-	Discovery *[]string `json:"discovery,omitempty"`
+	Discovery []string `json:"discovery,omitempty"`
 
 	// Name module name
-	Name *string `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
 
 	// Slug module name
-	Slug *string `json:"slug,omitempty"`
+	Slug string `json:"slug,omitempty"`
 
 	// BuildSystem module name
-	BuildSystem *string `json:"build_system,omitempty"`
+	BuildSystem string `json:"build_system,omitempty"`
 
 	// BuildSystemSyntax module name
-	BuildSystemSyntax *string `json:"build_system_syntax,omitempty"`
+	BuildSystemSyntax string `json:"build_system_syntax,omitempty"`
 
 	// Language module name
 	Language *map[string]string `json:"language,omitempty"`
@@ -82,29 +89,24 @@ type ProjectModule struct {
 	Dependencies *[]ProjectDependency `json:"dependencies,omitempty"`
 
 	// Files all files in the project directory
-	Files *[]string `json:"files,omitempty"`
+	Files []string `json:"files,omitempty"`
 
 	// Submodules submodules
 	Submodules *[]ProjectModule `json:"submodules,omitempty"`
 }
 
-type ModuleListResponse []ProjectModule
-
-type ModuleCurrentResponse ProjectModule
-
-type VCSCommitListResponse []VCSCommit
-
 type VCSCommit struct {
-	HashShort   string       `json:"hash_short,omitempty"`
-	Hash        string       `json:"hash,omitempty"`
-	Message     string       `json:"message,omitempty"`
-	Description string       `json:"description,omitempty"`
-	Author      VCSAuthor    `json:"author,omitempty"`
-	Comitter    VCSAuthor    `json:"committer,omitempty"`
-	Tags        *[]VCSTag    `json:"tags,omitempty"`
-	AuthoredAt  time.Time    `json:"authored_at,omitempty"`
-	CommittedAt time.Time    `json:"committed_at,omitempty"`
-	Changes     *[]VCSChange `json:"changes,omitempty"`
+	HashShort   string            `json:"hash_short,omitempty"`
+	Hash        string            `json:"hash,omitempty"`
+	Message     string            `json:"message,omitempty"`
+	Description string            `json:"description,omitempty"`
+	Author      VCSAuthor         `json:"author,omitempty"`
+	Committer   VCSAuthor         `json:"committer,omitempty"`
+	Tags        *[]VCSTag         `json:"tags,omitempty"`
+	AuthoredAt  time.Time         `json:"authored_at,omitempty"`
+	CommittedAt time.Time         `json:"committed_at,omitempty"`
+	Changes     *[]VCSChange      `json:"changes,omitempty"`
+	Context     map[string]string `json:"context,omitempty"`
 }
 
 type VCSAuthor struct {
@@ -112,15 +114,11 @@ type VCSAuthor struct {
 	Email string `json:"email,omitempty"`
 }
 
-type VCSTagListResponse []VCSTag
-
 type VCSTag struct {
 	RefType string `json:"type,omitempty"`
 	Value   string `json:"value,omitempty"`
 	Hash    string `json:"hash,omitempty"`
 }
-
-type VCSReleaseListResponse []VCSRelease
 
 type VCSRelease struct {
 	Version string `json:"version,omitempty"`
@@ -142,33 +140,42 @@ type VCSFile struct {
 
 // ExecuteCommandRequest defines model for ExecuteCommandRequest.
 type ExecuteCommandRequest struct {
-	// CaptureOutput capture and return the output (stdout and stderr will be passed thru if not set)
-	CaptureOutput *bool `json:"capture_output,omitempty"`
+	// CaptureOutput capture and return the output (stdout and stderr will be passed through if not set)
+	CaptureOutput bool `json:"capture_output,omitempty"`
 
 	// Command command
-	Command *string `json:"command,omitempty"`
+	Command string `json:"command,omitempty"`
 
 	// WorkDir directory to execute the command in (default = project root)
-	WorkDir *string `json:"work_dir,omitempty"`
+	WorkDir string `json:"work_dir,omitempty"`
+
+	// Env contains additional env properties
+	Env map[string]string `json:"env,omitempty"`
+}
+
+type LogMessageRequest struct {
+	Level   string                 `json:"level"`
+	Message string                 `json:"message"`
+	Context map[string]interface{} `json:"context"`
 }
 
 // ExecuteCommandResponse defines model for ExecuteCommandResponse.
 type ExecuteCommandResponse struct {
 	// Code command exit code
-	Code *float32 `json:"code,omitempty"`
+	Code int `json:"code,omitempty"`
 
 	// Command the command being executed
-	Command *string `json:"command,omitempty"`
+	Command string `json:"command,omitempty"`
 
 	// Dir directory the command is executed in
-	Dir *string `json:"dir,omitempty"`
+	Dir string `json:"dir,omitempty"`
 
 	// Error error message
-	Error *string `json:"error,omitempty"`
+	Error string `json:"error,omitempty"`
 
 	// Stderr error output (if capture-output was request, empty otherwise)
-	Stderr *string `json:"stderr,omitempty"`
+	Stderr string `json:"stderr,omitempty"`
 
 	// Stdout standard output (if capture-output was request, empty otherwise)
-	Stdout *string `json:"stdout,omitempty"`
+	Stdout string `json:"stdout,omitempty"`
 }
