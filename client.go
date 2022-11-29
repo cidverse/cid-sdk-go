@@ -2,15 +2,15 @@ package cidsdk
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-resty/resty/v2"
 	"net"
 	"net/http"
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/go-resty/resty/v2"
 )
 
 func NewSDK() (*SDK, error) {
@@ -54,7 +54,9 @@ func NewSDK() (*SDK, error) {
 type SDKClient interface {
 	Health() (*HealthcheckResponse, error)
 	Log(req LogMessageRequest) error
-	ProjectEnv() (map[string]string, error)
+	ModuleAction(cfg any) (ModuleActionData, error)
+	ProjectAction(cfg any) (ProjectActionData, error)
+	Env() (map[string]string, error)
 	Modules() ([]ProjectModule, error)
 	CurrentModule() (*ProjectModule, error)
 	CurrentConfig() (*CurrentConfig, error)
@@ -63,7 +65,10 @@ type SDKClient interface {
 	VCSTags() ([]VCSTag, error)
 	VCSReleases() ([]VCSRelease, error)
 	ExecuteCommand(req ExecuteCommandRequest) (*ExecuteCommandResponse, error)
-	PrepareAction(cfg any) (ActionEnv, error)
+	FileRead(file string) (string, error)
+	FileList(req FileRequest) (files []File, err error)
+	FileRename(old string, new string) error
+	FileRemove(file string) error
 }
 
 type SDK struct {
@@ -88,57 +93,18 @@ func (sdk SDK) Health() (*HealthcheckResponse, error) {
 	}
 }
 
-// Log request
-func (sdk SDK) Log(req LogMessageRequest) error {
-	resp, err := sdk.client.R().
-		SetHeader("Accept", "application/json").
-		SetBody(req).
-		SetError(&APIError{}).
-		Post("/log")
-
-	if err != nil {
-		return err
-	} else if resp.IsSuccess() {
-		return nil
-	} else {
-		return resp.Error().(*APIError)
-	}
-}
-
-// PrepareAction is a utility function that prepares some common data for actions
-func (sdk SDK) PrepareAction(cfg any) (ActionEnv, error) {
-	config, err := sdk.CurrentConfig()
-	if err != nil {
-		return ActionEnv{}, err
-	}
-
-	module, err := sdk.CurrentModule()
-	if err != nil {
-		return ActionEnv{}, err
-	}
-
-	if config.Config != "" && cfg != nil {
-		err := json.Unmarshal([]byte(config.Config), cfg)
-		if err != nil {
-			return ActionEnv{}, err
-		}
-	}
-
-	return ActionEnv{Config: *config, Module: *module}, nil
-}
-
-// ProjectEnv request
-func (sdk SDK) ProjectEnv() (map[string]string, error) {
+// Env request
+func (sdk SDK) Env() (map[string]string, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&map[string]string{}).
 		SetError(&APIError{}).
-		Get("/project")
+		Get("/env")
 
 	if err != nil {
 		return nil, err
 	} else if resp.IsSuccess() {
-		return resp.Result().(map[string]string), nil
+		return *resp.Result().(*map[string]string), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
@@ -258,24 +224,6 @@ func (sdk SDK) VCSReleases() ([]VCSRelease, error) {
 		return nil, err
 	} else if resp.IsSuccess() {
 		return resp.Result().([]VCSRelease), nil
-	} else {
-		return nil, resp.Error().(*APIError)
-	}
-}
-
-// ExecuteCommand command
-func (sdk SDK) ExecuteCommand(req ExecuteCommandRequest) (*ExecuteCommandResponse, error) {
-	resp, err := sdk.client.R().
-		SetHeader("Accept", "application/json").
-		SetBody(req).
-		SetResult(&ExecuteCommandResponse{}).
-		SetError(&APIError{}).
-		Post("/command")
-
-	if err != nil {
-		return nil, err
-	} else if resp.IsSuccess() {
-		return resp.Result().(*ExecuteCommandResponse), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}

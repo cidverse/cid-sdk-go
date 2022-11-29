@@ -26,11 +26,6 @@ type HealthcheckResponse struct {
 	Status string `json:"status"`
 }
 
-type ActionEnv struct {
-	Module ProjectModule
-	Config CurrentConfig
-}
-
 // ProjectDependency defines model for ProjectDependency.
 type ProjectDependency struct {
 	Id      string `json:"id,omitempty"`
@@ -42,6 +37,7 @@ type ProjectDependency struct {
 type CurrentConfig struct {
 	Debug        bool              `json:"debug,omitempty"`
 	Log          map[string]string `json:"log,omitempty"`
+	ProjectDir   string            `json:"project_dir,omitempty"`
 	TempDir      string            `json:"temp_dir,omitempty"`
 	ArtifactDir  string            `json:"artifact_dir,omitempty"`
 	HostName     string            `json:"host_name,omitempty"`
@@ -136,46 +132,4 @@ type VCSFile struct {
 	Name string `json:"name,omitempty"`
 	Size int    `json:"size,omitempty"`
 	Hash string `json:"hash,omitempty"`
-}
-
-// ExecuteCommandRequest defines model for ExecuteCommandRequest.
-type ExecuteCommandRequest struct {
-	// CaptureOutput capture and return the output (stdout and stderr will be passed through if not set)
-	CaptureOutput bool `json:"capture_output,omitempty"`
-
-	// Command command
-	Command string `json:"command,omitempty"`
-
-	// WorkDir directory to execute the command in (default = project root)
-	WorkDir string `json:"work_dir,omitempty"`
-
-	// Env contains additional env properties
-	Env map[string]string `json:"env,omitempty"`
-}
-
-type LogMessageRequest struct {
-	Level   string                 `json:"level"`
-	Message string                 `json:"message"`
-	Context map[string]interface{} `json:"context"`
-}
-
-// ExecuteCommandResponse defines model for ExecuteCommandResponse.
-type ExecuteCommandResponse struct {
-	// Code command exit code
-	Code int `json:"code,omitempty"`
-
-	// Command the command being executed
-	Command string `json:"command,omitempty"`
-
-	// Dir directory the command is executed in
-	Dir string `json:"dir,omitempty"`
-
-	// Error error message
-	Error string `json:"error,omitempty"`
-
-	// Stderr error output (if capture-output was request, empty otherwise)
-	Stderr string `json:"stderr,omitempty"`
-
-	// Stdout standard output (if capture-output was request, empty otherwise)
-	Stdout string `json:"stdout,omitempty"`
 }

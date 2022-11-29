@@ -58,6 +58,29 @@ func (_m *SDKClient) CurrentModule() (*cidsdk.ProjectModule, error) {
 	return r0, r1
 }
 
+// Env provides a mock function with given fields:
+func (_m *SDKClient) Env() (map[string]string, error) {
+	ret := _m.Called()
+
+	var r0 map[string]string
+	if rf, ok := ret.Get(0).(func() map[string]string); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(map[string]string)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ExecuteCommand provides a mock function with given fields: req
 func (_m *SDKClient) ExecuteCommand(req cidsdk.ExecuteCommandRequest) (*cidsdk.ExecuteCommandResponse, error) {
 	ret := _m.Called(req)
@@ -79,6 +102,78 @@ func (_m *SDKClient) ExecuteCommand(req cidsdk.ExecuteCommandRequest) (*cidsdk.E
 	}
 
 	return r0, r1
+}
+
+// FileList provides a mock function with given fields: req
+func (_m *SDKClient) FileList(req cidsdk.FileRequest) ([]cidsdk.File, error) {
+	ret := _m.Called(req)
+
+	var r0 []cidsdk.File
+	if rf, ok := ret.Get(0).(func(cidsdk.FileRequest) []cidsdk.File); ok {
+		r0 = rf(req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]cidsdk.File)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(cidsdk.FileRequest) error); ok {
+		r1 = rf(req)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FileRead provides a mock function with given fields: file
+func (_m *SDKClient) FileRead(file string) (string, error) {
+	ret := _m.Called(file)
+
+	var r0 string
+	if rf, ok := ret.Get(0).(func(string) string); ok {
+		r0 = rf(file)
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(string) error); ok {
+		r1 = rf(file)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// FileRemove provides a mock function with given fields: file
+func (_m *SDKClient) FileRemove(file string) error {
+	ret := _m.Called(file)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string) error); ok {
+		r0 = rf(file)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// FileRename provides a mock function with given fields: old, new
+func (_m *SDKClient) FileRename(old string, new string) error {
+	ret := _m.Called(old, new)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, string) error); ok {
+		r0 = rf(old, new)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
 }
 
 // Health provides a mock function with given fields:
@@ -109,6 +204,27 @@ func (_m *SDKClient) Log(req cidsdk.LogMessageRequest) error {
 	return nil
 }
 
+// ModuleAction provides a mock function with given fields: cfg
+func (_m *SDKClient) ModuleAction(cfg interface{}) (cidsdk.ModuleActionData, error) {
+	ret := _m.Called(cfg)
+
+	var r0 cidsdk.ModuleActionData
+	if rf, ok := ret.Get(0).(func(interface{}) cidsdk.ModuleActionData); ok {
+		r0 = rf(cfg)
+	} else {
+		r0 = ret.Get(0).(cidsdk.ModuleActionData)
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(interface{}) error); ok {
+		r1 = rf(cfg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Modules provides a mock function with given fields:
 func (_m *SDKClient) Modules() ([]cidsdk.ProjectModule, error) {
 	ret := _m.Called()
@@ -132,43 +248,20 @@ func (_m *SDKClient) Modules() ([]cidsdk.ProjectModule, error) {
 	return r0, r1
 }
 
-// PrepareAction provides a mock function with given fields: cfg
-func (_m *SDKClient) PrepareAction(cfg interface{}) (cidsdk.ActionEnv, error) {
+// ProjectAction provides a mock function with given fields: cfg
+func (_m *SDKClient) ProjectAction(cfg interface{}) (cidsdk.ProjectActionData, error) {
 	ret := _m.Called(cfg)
 
-	var r0 cidsdk.ActionEnv
-	if rf, ok := ret.Get(0).(func(interface{}) cidsdk.ActionEnv); ok {
+	var r0 cidsdk.ProjectActionData
+	if rf, ok := ret.Get(0).(func(interface{}) cidsdk.ProjectActionData); ok {
 		r0 = rf(cfg)
 	} else {
-		r0 = ret.Get(0).(cidsdk.ActionEnv)
+		r0 = ret.Get(0).(cidsdk.ProjectActionData)
 	}
 
 	var r1 error
 	if rf, ok := ret.Get(1).(func(interface{}) error); ok {
 		r1 = rf(cfg)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
-// ProjectEnv provides a mock function with given fields:
-func (_m *SDKClient) ProjectEnv() (map[string]string, error) {
-	ret := _m.Called()
-
-	var r0 map[string]string
-	if rf, ok := ret.Get(0).(func() map[string]string); ok {
-		r0 = rf()
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(map[string]string)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func() error); ok {
-		r1 = rf()
 	} else {
 		r1 = ret.Error(1)
 	}
