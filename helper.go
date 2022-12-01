@@ -39,6 +39,8 @@ func (sdk SDK) ModuleAction(cfg any) (ModuleActionData, error) {
 		if err != nil {
 			return ModuleActionData{}, err
 		}
+
+		OverwriteFromEnv(&cfg)
 	}
 
 	return ModuleActionData{ProjectDir: (*config).ProjectDir, Config: *config, Module: *module, Env: env}, nil
@@ -56,6 +58,8 @@ func (sdk SDK) ProjectAction(cfg any) (ProjectActionData, error) {
 		if err != nil {
 			return ProjectActionData{}, err
 		}
+
+		OverwriteFromEnv(&cfg)
 	}
 
 	return ProjectActionData{ProjectDir: (*config).ProjectDir, Config: *config}, nil
