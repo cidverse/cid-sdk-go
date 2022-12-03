@@ -176,6 +176,20 @@ func (_m *SDKClient) FileRename(old string, new string) error {
 	return r0
 }
 
+// FileWrite provides a mock function with given fields: file, content
+func (_m *SDKClient) FileWrite(file string, content []byte) error {
+	ret := _m.Called(file, content)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, []byte) error); ok {
+		r0 = rf(file, content)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // Health provides a mock function with given fields:
 func (_m *SDKClient) Health() (*cidsdk.HealthcheckResponse, error) {
 	ret := _m.Called()

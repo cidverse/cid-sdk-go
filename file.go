@@ -96,3 +96,13 @@ func (sdk SDK) FileRemove(file string) error {
 
 	return nil
 }
+
+// FileWrite command
+func (sdk SDK) FileWrite(file string, content []byte) error {
+	err := os.WriteFile(file, content, os.ModePerm)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

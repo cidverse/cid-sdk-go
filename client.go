@@ -69,6 +69,7 @@ type SDKClient interface {
 	FileList(req FileRequest) (files []File, err error)
 	FileRename(old string, new string) error
 	FileRemove(file string) error
+	FileWrite(file string, content []byte) error
 }
 
 type SDK struct {
