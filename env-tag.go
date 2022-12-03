@@ -9,7 +9,6 @@ import (
 const envVarTag = "env"
 
 // OverwriteFromEnv will overwrite values with the given env values if present
-// OverwriteFromEnv will overwrite values with the given env values if present
 func OverwriteFromEnv[T any](data *T) {
 	t := reflect.TypeOf(*data)
 	v := reflect.ValueOf(*data)

@@ -13,6 +13,9 @@ type ExecuteCommandRequest struct {
 
 	// Env contains additional env properties
 	Env map[string]string `json:"env,omitempty"`
+
+	// Ports that will be exposed
+	Ports []int `json:"ports,omitempty"`
 }
 
 // ExecuteCommandResponse defines model for ExecuteCommandResponse.
