@@ -70,6 +70,7 @@ type SDKClient interface {
 	FileRename(old string, new string) error
 	FileRemove(file string) error
 	FileWrite(file string, content []byte) error
+	UUID() string
 }
 
 type SDK struct {

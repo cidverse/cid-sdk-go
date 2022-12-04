@@ -283,6 +283,20 @@ func (_m *SDKClient) ProjectAction(cfg interface{}) (cidsdk.ProjectActionData, e
 	return r0, r1
 }
 
+// UUID provides a mock function with given fields:
+func (_m *SDKClient) UUID() string {
+	ret := _m.Called()
+
+	var r0 string
+	if rf, ok := ret.Get(0).(func() string); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Get(0).(string)
+	}
+
+	return r0
+}
+
 // VCSCommitByHash provides a mock function with given fields: hash, changes
 func (_m *SDKClient) VCSCommitByHash(hash string, changes bool) (*cidsdk.VCSCommit, error) {
 	ret := _m.Called(hash, changes)
