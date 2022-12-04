@@ -14,6 +14,7 @@ type ModuleActionData struct {
 type ProjectActionData struct {
 	ProjectDir string
 	Config     CurrentConfig
+	Modules    []ProjectModule
 	Env        map[string]string
 }
 
@@ -58,5 +59,10 @@ func (sdk SDK) ProjectAction(cfg any) (ProjectActionData, error) {
 		}
 	}
 
-	return ProjectActionData{ProjectDir: (*config).ProjectDir, Config: *config}, nil
+	modules, err := sdk.Modules()
+	if err != nil {
+		return ProjectActionData{}, err
+	}
+
+	return ProjectActionData{ProjectDir: (*config).ProjectDir, Config: *config, Modules: modules}, nil
 }
