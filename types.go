@@ -64,7 +64,7 @@ type ProjectModule struct {
 	ModuleDir string `json:"module_dir,omitempty"`
 
 	// Discovery module detected based on
-	Discovery []string `json:"discovery,omitempty"`
+	Discovery []ProjectModuleDiscovery `json:"discovery,omitempty"`
 
 	// Name module name
 	Name string `json:"name,omitempty"`
@@ -89,6 +89,11 @@ type ProjectModule struct {
 
 	// Submodules submodules
 	Submodules *[]ProjectModule `json:"submodules,omitempty"`
+}
+
+// ProjectModuleDiscovery contains info on the files used to discover the module
+type ProjectModuleDiscovery struct {
+	File string `json:"file"`
 }
 
 type VCSCommit struct {
