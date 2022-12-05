@@ -320,13 +320,13 @@ func (_m *SDKClient) VCSCommitByHash(hash string, changes bool) (*cidsdk.VCSComm
 	return r0, r1
 }
 
-// VCSCommits provides a mock function with given fields: changes, limit
-func (_m *SDKClient) VCSCommits(changes bool, limit int) ([]cidsdk.VCSCommit, error) {
-	ret := _m.Called(changes, limit)
+// VCSCommits provides a mock function with given fields: from, to, changes, limit
+func (_m *SDKClient) VCSCommits(from string, to string, changes bool, limit int) ([]cidsdk.VCSCommit, error) {
+	ret := _m.Called(from, to, changes, limit)
 
 	var r0 []cidsdk.VCSCommit
-	if rf, ok := ret.Get(0).(func(bool, int) []cidsdk.VCSCommit); ok {
-		r0 = rf(changes, limit)
+	if rf, ok := ret.Get(0).(func(string, string, bool, int) []cidsdk.VCSCommit); ok {
+		r0 = rf(from, to, changes, limit)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).([]cidsdk.VCSCommit)
@@ -334,8 +334,8 @@ func (_m *SDKClient) VCSCommits(changes bool, limit int) ([]cidsdk.VCSCommit, er
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(bool, int) error); ok {
-		r1 = rf(changes, limit)
+	if rf, ok := ret.Get(1).(func(string, string, bool, int) error); ok {
+		r1 = rf(from, to, changes, limit)
 	} else {
 		r1 = ret.Error(1)
 	}

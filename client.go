@@ -60,7 +60,7 @@ type SDKClient interface {
 	Modules() ([]ProjectModule, error)
 	CurrentModule() (*ProjectModule, error)
 	CurrentConfig() (*CurrentConfig, error)
-	VCSCommits(changes bool, limit int) ([]VCSCommit, error)
+	VCSCommits(from string, to string, changes bool, limit int) ([]VCSCommit, error)
 	VCSCommitByHash(hash string, changes bool) (*VCSCommit, error)
 	VCSTags() ([]VCSTag, error)
 	VCSReleases() ([]VCSRelease, error)
@@ -164,12 +164,12 @@ func (sdk SDK) CurrentModule() (*ProjectModule, error) {
 }
 
 // VCSCommits request
-func (sdk SDK) VCSCommits(changes bool, limit int) ([]VCSCommit, error) {
+func (sdk SDK) VCSCommits(from string, to string, changes bool, limit int) ([]VCSCommit, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSCommit{}).
 		SetError(&APIError{}).
-		Get("/vcs/commit?changes=" + strconv.FormatBool(changes) + "&limit=" + strconv.Itoa(limit))
+		Get(fmt.Sprintf("/vcs/commit?from=%s&to=%schanges=%s&limit=%s", from, to, strconv.FormatBool(changes), strconv.Itoa(limit)))
 
 	if err != nil {
 		return nil, err
