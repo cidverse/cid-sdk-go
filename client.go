@@ -29,7 +29,7 @@ func NewSDK() (*SDK, error) {
 		}
 
 		// base url
-		client.SetTransport(&transport).SetScheme("http").SetBaseURL(unixSocket)
+		client.SetTransport(&transport).SetBaseURL("http://localhost")
 	}
 
 	// http endpoint
