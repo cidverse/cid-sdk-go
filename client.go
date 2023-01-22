@@ -70,6 +70,9 @@ type SDKClient interface {
 	FileRename(old string, new string) error
 	FileRemove(file string) error
 	FileWrite(file string, content []byte) error
+	ArtifactList() error
+	ArtifactUpload() error
+	ArtifactDownload() error
 	UUID() string
 }
 
@@ -229,4 +232,85 @@ func (sdk SDK) VCSReleases() ([]VCSRelease, error) {
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
+}
+
+type ArtifactListRequest struct {
+}
+
+// ArtifactList request
+func (sdk SDK) ArtifactList(request ArtifactListRequest) ([]ActionArtifact, error) {
+	resp, err := sdk.client.R().
+		SetHeader("Accept", "application/json").
+		SetResult(&[]ActionArtifact{}).
+		SetError(&APIError{}).
+		Get("/artifact")
+
+	if err != nil {
+		return nil, err
+	} else if resp.IsSuccess() {
+		return *resp.Result().(*[]ActionArtifact), nil
+	} else {
+		return nil, resp.Error().(*APIError)
+	}
+}
+
+type ArtifactUploadRequest struct {
+	File          string `json:"file"`
+	Type          string `json:"type"`
+	Format        string `json:"format"`
+	FormatVersion string `json:"format_version"`
+}
+
+// ArtifactUpload request
+func (sdk SDK) ArtifactUpload(request ArtifactUploadRequest) error {
+	f, err := os.Open(request.File)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	// upload
+	resp, err := sdk.client.R().
+		SetBody(f).
+		SetFormData(map[string]string{
+			"type":           request.Type,
+			"format":         request.Format,
+			"format_version": request.FormatVersion,
+		}).
+		SetFile("file", request.File).
+		SetContentLength(true).
+		SetError(&APIError{}).
+		Post("/artifact")
+	if err != nil {
+		return err
+	} else if resp.IsError() {
+		return resp.Error().(*APIError)
+	}
+
+	return nil
+}
+
+type ArtifactDownloadRequest struct {
+	Module     string `json:"module"`
+	Type       string `json:"type"`
+	Name       string `json:"name"`
+	TargetFile string `json:"target_file"`
+}
+
+// ArtifactDownload request
+func (sdk SDK) ArtifactDownload(request ArtifactDownloadRequest) error {
+	resp, err := sdk.client.R().
+		SetQueryParam("module", request.Module).
+		SetQueryParam("type", request.Type).
+		SetQueryParam("name", request.Name).
+		SetOutput(request.TargetFile).
+		SetError(&APIError{}).
+		Get("/artifact/download")
+	if err != nil {
+		return err
+	} else if resp.IsError() {
+		return resp.Error().(*APIError)
+	}
+
+	return nil
 }

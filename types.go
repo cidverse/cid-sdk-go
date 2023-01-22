@@ -138,3 +138,21 @@ type VCSFile struct {
 	Size int    `json:"size,omitempty"`
 	Hash string `json:"hash,omitempty"`
 }
+
+type ActionArtifactType string
+
+const (
+	ActionArtifactTypeBinary ActionArtifactType = "binary"
+	ActionArtifactTypeReport ActionArtifactType = "report"
+)
+
+// ActionArtifact contains information about generated artifacts
+type ActionArtifact struct {
+	BuildID       string             `json:"build_id,omitempty"`
+	JobID         string             `json:"job_id,omitempty"`
+	Module        string             `json:"module,omitempty"`
+	Type          ActionArtifactType `json:"type,omitempty"`
+	Name          string             `json:"name,omitempty"`
+	Format        string             `json:"format,omitempty"`
+	FormatVersion string             `json:"format_version,omitempty"`
+}
