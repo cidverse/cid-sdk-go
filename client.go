@@ -166,13 +166,20 @@ func (sdk SDK) CurrentModule() (*ProjectModule, error) {
 	}
 }
 
+type VCSCommitsRequest struct {
+	FromHash       string `json:"from"`
+	ToHash         string `json:"to"`
+	IncludeChanges bool   `json:"changes"`
+	Limit          int    `json:"limit"`
+}
+
 // VCSCommits request
-func (sdk SDK) VCSCommits(from string, to string, changes bool, limit int) ([]VCSCommit, error) {
+func (sdk SDK) VCSCommits(request VCSCommitsRequest) ([]VCSCommit, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSCommit{}).
 		SetError(&APIError{}).
-		Get(fmt.Sprintf("/vcs/commit?from=%s&to=%schanges=%s&limit=%s", from, to, strconv.FormatBool(changes), strconv.Itoa(limit)))
+		Get(fmt.Sprintf("/vcs/commit?from=%s&to=%schanges=%s&limit=%s", request.FromHash, request.ToHash, strconv.FormatBool(request.IncludeChanges), strconv.Itoa(request.Limit)))
 
 	if err != nil {
 		return nil, err
@@ -183,13 +190,18 @@ func (sdk SDK) VCSCommits(from string, to string, changes bool, limit int) ([]VC
 	}
 }
 
+type VCSCommitByHashRequest struct {
+	Hash           string `json:"hash"`
+	IncludeChanges bool   `json:"changes"`
+}
+
 // VCSCommitByHash request
-func (sdk SDK) VCSCommitByHash(hash string, changes bool) (*VCSCommit, error) {
+func (sdk SDK) VCSCommitByHash(request VCSCommitByHashRequest) (*VCSCommit, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&VCSCommit{}).
 		SetError(&APIError{}).
-		Get("/vcs/commit/" + hash + "?changes=" + strconv.FormatBool(changes))
+		Get("/vcs/commit/" + request.Hash + "?changes=" + strconv.FormatBool(request.IncludeChanges))
 
 	if err != nil {
 		return nil, err
