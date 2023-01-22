@@ -42,7 +42,7 @@ func (sdk SDK) ModuleAction(cfg any) (ModuleActionData, error) {
 		}
 	}
 
-	return ModuleActionData{ProjectDir: (*config).ProjectDir, Config: *config, Module: *module, Env: env}, nil
+	return ModuleActionData{ProjectDir: config.ProjectDir, Config: *config, Module: *module, Env: env}, nil
 }
 
 // ProjectAction is a utility function to prepare to run a project-scoped action
@@ -64,5 +64,5 @@ func (sdk SDK) ProjectAction(cfg any) (ProjectActionData, error) {
 		return ProjectActionData{}, err
 	}
 
-	return ProjectActionData{ProjectDir: (*config).ProjectDir, Config: *config, Modules: modules}, nil
+	return ProjectActionData{ProjectDir: (*config).ProjectDir, Config: *config, Modules: *modules}, nil
 }

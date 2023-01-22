@@ -12,13 +12,13 @@ type SDKClient struct {
 	mock.Mock
 }
 
-// ArtifactDownload provides a mock function with given fields:
-func (_m *SDKClient) ArtifactDownload() error {
-	ret := _m.Called()
+// ArtifactDownload provides a mock function with given fields: request
+func (_m *SDKClient) ArtifactDownload(request cidsdk.ArtifactDownloadRequest) error {
+	ret := _m.Called(request)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func() error); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(cidsdk.ArtifactDownloadRequest) error); ok {
+		r0 = rf(request)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -26,27 +26,36 @@ func (_m *SDKClient) ArtifactDownload() error {
 	return r0
 }
 
-// ArtifactList provides a mock function with given fields:
-func (_m *SDKClient) ArtifactList() error {
-	ret := _m.Called()
+// ArtifactList provides a mock function with given fields: request
+func (_m *SDKClient) ArtifactList(request cidsdk.ArtifactListRequest) (*[]cidsdk.ActionArtifact, error) {
+	ret := _m.Called(request)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func() error); ok {
-		r0 = rf()
+	var r0 *[]cidsdk.ActionArtifact
+	if rf, ok := ret.Get(0).(func(cidsdk.ArtifactListRequest) *[]cidsdk.ActionArtifact); ok {
+		r0 = rf(request)
 	} else {
-		r0 = ret.Error(0)
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*[]cidsdk.ActionArtifact)
+		}
 	}
 
-	return r0
+	var r1 error
+	if rf, ok := ret.Get(1).(func(cidsdk.ArtifactListRequest) error); ok {
+		r1 = rf(request)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
-// ArtifactUpload provides a mock function with given fields:
-func (_m *SDKClient) ArtifactUpload() error {
-	ret := _m.Called()
+// ArtifactUpload provides a mock function with given fields: request
+func (_m *SDKClient) ArtifactUpload(request cidsdk.ArtifactUploadRequest) error {
+	ret := _m.Called(request)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func() error); ok {
-		r0 = rf()
+	if rf, ok := ret.Get(0).(func(cidsdk.ArtifactUploadRequest) error); ok {
+		r0 = rf(request)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -282,15 +291,15 @@ func (_m *SDKClient) ModuleAction(cfg interface{}) (cidsdk.ModuleActionData, err
 }
 
 // Modules provides a mock function with given fields:
-func (_m *SDKClient) Modules() ([]cidsdk.ProjectModule, error) {
+func (_m *SDKClient) Modules() (*[]cidsdk.ProjectModule, error) {
 	ret := _m.Called()
 
-	var r0 []cidsdk.ProjectModule
-	if rf, ok := ret.Get(0).(func() []cidsdk.ProjectModule); ok {
+	var r0 *[]cidsdk.ProjectModule
+	if rf, ok := ret.Get(0).(func() *[]cidsdk.ProjectModule); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]cidsdk.ProjectModule)
+			r0 = ret.Get(0).(*[]cidsdk.ProjectModule)
 		}
 	}
 
@@ -339,13 +348,13 @@ func (_m *SDKClient) UUID() string {
 	return r0
 }
 
-// VCSCommitByHash provides a mock function with given fields: hash, changes
-func (_m *SDKClient) VCSCommitByHash(hash string, changes bool) (*cidsdk.VCSCommit, error) {
-	ret := _m.Called(hash, changes)
+// VCSCommitByHash provides a mock function with given fields: request
+func (_m *SDKClient) VCSCommitByHash(request cidsdk.VCSCommitByHashRequest) (*cidsdk.VCSCommit, error) {
+	ret := _m.Called(request)
 
 	var r0 *cidsdk.VCSCommit
-	if rf, ok := ret.Get(0).(func(string, bool) *cidsdk.VCSCommit); ok {
-		r0 = rf(hash, changes)
+	if rf, ok := ret.Get(0).(func(cidsdk.VCSCommitByHashRequest) *cidsdk.VCSCommit); ok {
+		r0 = rf(request)
 	} else {
 		if ret.Get(0) != nil {
 			r0 = ret.Get(0).(*cidsdk.VCSCommit)
@@ -353,8 +362,8 @@ func (_m *SDKClient) VCSCommitByHash(hash string, changes bool) (*cidsdk.VCSComm
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string, bool) error); ok {
-		r1 = rf(hash, changes)
+	if rf, ok := ret.Get(1).(func(cidsdk.VCSCommitByHashRequest) error); ok {
+		r1 = rf(request)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -362,22 +371,22 @@ func (_m *SDKClient) VCSCommitByHash(hash string, changes bool) (*cidsdk.VCSComm
 	return r0, r1
 }
 
-// VCSCommits provides a mock function with given fields: from, to, changes, limit
-func (_m *SDKClient) VCSCommits(from string, to string, changes bool, limit int) ([]cidsdk.VCSCommit, error) {
-	ret := _m.Called(from, to, changes, limit)
+// VCSCommits provides a mock function with given fields: request
+func (_m *SDKClient) VCSCommits(request cidsdk.VCSCommitsRequest) (*[]cidsdk.VCSCommit, error) {
+	ret := _m.Called(request)
 
-	var r0 []cidsdk.VCSCommit
-	if rf, ok := ret.Get(0).(func(string, string, bool, int) []cidsdk.VCSCommit); ok {
-		r0 = rf(from, to, changes, limit)
+	var r0 *[]cidsdk.VCSCommit
+	if rf, ok := ret.Get(0).(func(cidsdk.VCSCommitsRequest) *[]cidsdk.VCSCommit); ok {
+		r0 = rf(request)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]cidsdk.VCSCommit)
+			r0 = ret.Get(0).(*[]cidsdk.VCSCommit)
 		}
 	}
 
 	var r1 error
-	if rf, ok := ret.Get(1).(func(string, string, bool, int) error); ok {
-		r1 = rf(from, to, changes, limit)
+	if rf, ok := ret.Get(1).(func(cidsdk.VCSCommitsRequest) error); ok {
+		r1 = rf(request)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -386,15 +395,15 @@ func (_m *SDKClient) VCSCommits(from string, to string, changes bool, limit int)
 }
 
 // VCSReleases provides a mock function with given fields:
-func (_m *SDKClient) VCSReleases() ([]cidsdk.VCSRelease, error) {
+func (_m *SDKClient) VCSReleases() (*[]cidsdk.VCSRelease, error) {
 	ret := _m.Called()
 
-	var r0 []cidsdk.VCSRelease
-	if rf, ok := ret.Get(0).(func() []cidsdk.VCSRelease); ok {
+	var r0 *[]cidsdk.VCSRelease
+	if rf, ok := ret.Get(0).(func() *[]cidsdk.VCSRelease); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]cidsdk.VCSRelease)
+			r0 = ret.Get(0).(*[]cidsdk.VCSRelease)
 		}
 	}
 
@@ -409,15 +418,15 @@ func (_m *SDKClient) VCSReleases() ([]cidsdk.VCSRelease, error) {
 }
 
 // VCSTags provides a mock function with given fields:
-func (_m *SDKClient) VCSTags() ([]cidsdk.VCSTag, error) {
+func (_m *SDKClient) VCSTags() (*[]cidsdk.VCSTag, error) {
 	ret := _m.Called()
 
-	var r0 []cidsdk.VCSTag
-	if rf, ok := ret.Get(0).(func() []cidsdk.VCSTag); ok {
+	var r0 *[]cidsdk.VCSTag
+	if rf, ok := ret.Get(0).(func() *[]cidsdk.VCSTag); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]cidsdk.VCSTag)
+			r0 = ret.Get(0).(*[]cidsdk.VCSTag)
 		}
 	}
 

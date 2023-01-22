@@ -57,22 +57,22 @@ type SDKClient interface {
 	ModuleAction(cfg any) (ModuleActionData, error)
 	ProjectAction(cfg any) (ProjectActionData, error)
 	Env() (map[string]string, error)
-	Modules() ([]ProjectModule, error)
+	Modules() (*[]ProjectModule, error)
 	CurrentModule() (*ProjectModule, error)
 	CurrentConfig() (*CurrentConfig, error)
-	VCSCommits(from string, to string, changes bool, limit int) ([]VCSCommit, error)
-	VCSCommitByHash(hash string, changes bool) (*VCSCommit, error)
-	VCSTags() ([]VCSTag, error)
-	VCSReleases() ([]VCSRelease, error)
+	VCSCommits(request VCSCommitsRequest) (*[]VCSCommit, error)
+	VCSCommitByHash(request VCSCommitByHashRequest) (*VCSCommit, error)
+	VCSTags() (*[]VCSTag, error)
+	VCSReleases() (*[]VCSRelease, error)
 	ExecuteCommand(req ExecuteCommandRequest) (*ExecuteCommandResponse, error)
 	FileRead(file string) (string, error)
 	FileList(req FileRequest) (files []File, err error)
 	FileRename(old string, new string) error
 	FileRemove(file string) error
 	FileWrite(file string, content []byte) error
-	ArtifactList() error
-	ArtifactUpload() error
-	ArtifactDownload() error
+	ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, error)
+	ArtifactUpload(request ArtifactUploadRequest) error
+	ArtifactDownload(request ArtifactDownloadRequest) error
 	UUID() string
 }
 
@@ -133,7 +133,7 @@ func (sdk SDK) CurrentConfig() (*CurrentConfig, error) {
 }
 
 // Modules request
-func (sdk SDK) Modules() ([]ProjectModule, error) {
+func (sdk SDK) Modules() (*[]ProjectModule, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&[]ProjectModule{}).
@@ -143,7 +143,7 @@ func (sdk SDK) Modules() ([]ProjectModule, error) {
 	if err != nil {
 		return nil, err
 	} else if resp.IsSuccess() {
-		return resp.Result().([]ProjectModule), nil
+		return resp.Result().(*[]ProjectModule), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
@@ -174,7 +174,7 @@ type VCSCommitsRequest struct {
 }
 
 // VCSCommits request
-func (sdk SDK) VCSCommits(request VCSCommitsRequest) ([]VCSCommit, error) {
+func (sdk SDK) VCSCommits(request VCSCommitsRequest) (*[]VCSCommit, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSCommit{}).
@@ -184,7 +184,7 @@ func (sdk SDK) VCSCommits(request VCSCommitsRequest) ([]VCSCommit, error) {
 	if err != nil {
 		return nil, err
 	} else if resp.IsSuccess() {
-		return resp.Result().([]VCSCommit), nil
+		return resp.Result().(*[]VCSCommit), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
@@ -213,7 +213,7 @@ func (sdk SDK) VCSCommitByHash(request VCSCommitByHashRequest) (*VCSCommit, erro
 }
 
 // VCSTags request
-func (sdk SDK) VCSTags() ([]VCSTag, error) {
+func (sdk SDK) VCSTags() (*[]VCSTag, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSTag{}).
@@ -223,14 +223,14 @@ func (sdk SDK) VCSTags() ([]VCSTag, error) {
 	if err != nil {
 		return nil, err
 	} else if resp.IsSuccess() {
-		return resp.Result().([]VCSTag), nil
+		return resp.Result().(*[]VCSTag), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
 }
 
 // VCSReleases request
-func (sdk SDK) VCSReleases() ([]VCSRelease, error) {
+func (sdk SDK) VCSReleases() (*[]VCSRelease, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSRelease{}).
@@ -240,7 +240,7 @@ func (sdk SDK) VCSReleases() ([]VCSRelease, error) {
 	if err != nil {
 		return nil, err
 	} else if resp.IsSuccess() {
-		return resp.Result().([]VCSRelease), nil
+		return resp.Result().(*[]VCSRelease), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
@@ -250,7 +250,7 @@ type ArtifactListRequest struct {
 }
 
 // ArtifactList request
-func (sdk SDK) ArtifactList(request ArtifactListRequest) ([]ActionArtifact, error) {
+func (sdk SDK) ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&[]ActionArtifact{}).
@@ -260,7 +260,7 @@ func (sdk SDK) ArtifactList(request ArtifactListRequest) ([]ActionArtifact, erro
 	if err != nil {
 		return nil, err
 	} else if resp.IsSuccess() {
-		return *resp.Result().(*[]ActionArtifact), nil
+		return resp.Result().(*[]ActionArtifact), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
@@ -268,6 +268,7 @@ func (sdk SDK) ArtifactList(request ArtifactListRequest) ([]ActionArtifact, erro
 
 type ArtifactUploadRequest struct {
 	File          string `json:"file"`
+	Module        string `json:"module"`
 	Type          string `json:"type"`
 	Format        string `json:"format"`
 	FormatVersion string `json:"format_version"`
@@ -286,6 +287,7 @@ func (sdk SDK) ArtifactUpload(request ArtifactUploadRequest) error {
 		SetBody(f).
 		SetFormData(map[string]string{
 			"type":           request.Type,
+			"module":         request.Module,
 			"format":         request.Format,
 			"format_version": request.FormatVersion,
 		}).
