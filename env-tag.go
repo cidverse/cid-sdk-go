@@ -9,9 +9,14 @@ import (
 const envVarTag = "env"
 
 // OverwriteFromEnv will overwrite values with the given env values if present
-func OverwriteFromEnv[T any](data *T) {
-	t := reflect.TypeOf(*data)
-	v := reflect.ValueOf(*data)
+func OverwriteFromEnv(data interface{}) {
+	val := reflect.ValueOf(data).Elem()
+	t := val.Type()
+
+	// check if the type passed in is a struct
+	if t.Kind() != reflect.Struct {
+		return
+	}
 
 	// iterate over all fields of the struct
 	for i := 0; i < t.NumField(); i++ {
@@ -21,26 +26,19 @@ func OverwriteFromEnv[T any](data *T) {
 		if tag == "" {
 			continue
 		}
-
-		// overwrite with env value if present
-		if tag != "" {
-			if field.Type.Kind() == reflect.Int {
-				val, isSet := os.LookupEnv(tag)
-				if isSet {
-					valAsInt, _ := strconv.Atoi(val)
-					v.Elem().Field(i).SetInt(int64(valAsInt))
-				}
-			} else if field.Type.Kind() == reflect.String {
-				val, isSet := os.LookupEnv(tag)
-				if isSet {
-					v.Elem().Field(i).SetString(val)
-				}
-			} else if field.Type.Kind() == reflect.Bool {
-				val, isSet := os.LookupEnv(tag)
-				if isSet {
-					valAsBool, _ := strconv.ParseBool(val)
-					v.Elem().Field(i).SetBool(valAsBool)
-				}
+		if envVal, isSet := os.LookupEnv(tag); isSet {
+			fieldVal := val.Field(i)
+			switch fieldVal.Kind() {
+			case reflect.String:
+				fieldVal.SetString(envVal)
+			case reflect.Int:
+				valAsInt, _ := strconv.Atoi(envVal)
+				fieldVal.Set(reflect.ValueOf(valAsInt))
+			case reflect.Bool:
+				valAsBool, _ := strconv.ParseBool(envVal)
+				fieldVal.Set(reflect.ValueOf(valAsBool))
+			default:
+				// unsupported type
 			}
 		}
 	}
