@@ -201,7 +201,7 @@ func (sdk SDK) VCSCommitByHash(request VCSCommitByHashRequest) (*VCSCommit, erro
 		SetHeader("Accept", "application/json").
 		SetResult(&VCSCommit{}).
 		SetError(&APIError{}).
-		Get("/vcs/commit/" + request.Hash + "?changes=" + strconv.FormatBool(request.IncludeChanges))
+		Get(fmt.Sprintf("/vcs/commit/%s?changes=%s", request.Hash, strconv.FormatBool(request.IncludeChanges)))
 
 	if err != nil {
 		return nil, err
@@ -247,6 +247,11 @@ func (sdk SDK) VCSReleases() (*[]VCSRelease, error) {
 }
 
 type ArtifactListRequest struct {
+	Module        string `json:"module"`
+	ArtifactType  string `json:"type"`
+	Name          string `json:"name"`
+	Format        string `json:"format"`
+	FormatVersion string `json:"format_version"`
 }
 
 // ArtifactList request
@@ -255,7 +260,7 @@ func (sdk SDK) ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, err
 		SetHeader("Accept", "application/json").
 		SetResult(&[]ActionArtifact{}).
 		SetError(&APIError{}).
-		Get("/artifact")
+		Get(fmt.Sprintf("/artifact?module=%s&type=%s&name=%s&format=%s&format_version=%s", request.Module, request.ArtifactType, request.Name, request.Format, request.FormatVersion))
 
 	if err != nil {
 		return nil, err
