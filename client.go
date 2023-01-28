@@ -73,6 +73,7 @@ type SDKClient interface {
 	ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, error)
 	ArtifactUpload(request ArtifactUploadRequest) error
 	ArtifactDownload(request ArtifactDownloadRequest) error
+	ArtifactByteArray(request ArtifactByteArrayRequest) ([]byte, error)
 	UUID() string
 }
 
@@ -332,4 +333,27 @@ func (sdk SDK) ArtifactDownload(request ArtifactDownloadRequest) error {
 	}
 
 	return nil
+}
+
+type ArtifactByteArrayRequest struct {
+	Module string `json:"module"`
+	Type   string `json:"type"`
+	Name   string `json:"name"`
+}
+
+// ArtifactByteArray request
+func (sdk SDK) ArtifactByteArray(request ArtifactByteArrayRequest) ([]byte, error) {
+	resp, err := sdk.client.R().
+		SetQueryParam("module", request.Module).
+		SetQueryParam("type", request.Type).
+		SetQueryParam("name", request.Name).
+		SetError(&APIError{}).
+		Get("/artifact/download")
+	if err != nil {
+		return nil, err
+	} else if resp.IsError() {
+		return nil, resp.Error().(*APIError)
+	}
+
+	return resp.Body(), nil
 }

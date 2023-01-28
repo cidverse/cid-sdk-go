@@ -12,6 +12,29 @@ type SDKClient struct {
 	mock.Mock
 }
 
+// ArtifactByteArray provides a mock function with given fields: request
+func (_m *SDKClient) ArtifactByteArray(request cidsdk.ArtifactByteArrayRequest) ([]byte, error) {
+	ret := _m.Called(request)
+
+	var r0 []byte
+	if rf, ok := ret.Get(0).(func(cidsdk.ArtifactByteArrayRequest) []byte); ok {
+		r0 = rf(request)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]byte)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(cidsdk.ArtifactByteArrayRequest) error); ok {
+		r1 = rf(request)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // ArtifactDownload provides a mock function with given fields: request
 func (_m *SDKClient) ArtifactDownload(request cidsdk.ArtifactDownloadRequest) error {
 	ret := _m.Called(request)
