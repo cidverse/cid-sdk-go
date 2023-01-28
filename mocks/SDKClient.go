@@ -12,29 +12,6 @@ type SDKClient struct {
 	mock.Mock
 }
 
-// ArtifactByteArray provides a mock function with given fields: request
-func (_m *SDKClient) ArtifactByteArray(request cidsdk.ArtifactByteArrayRequest) ([]byte, error) {
-	ret := _m.Called(request)
-
-	var r0 []byte
-	if rf, ok := ret.Get(0).(func(cidsdk.ArtifactByteArrayRequest) []byte); ok {
-		r0 = rf(request)
-	} else {
-		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]byte)
-		}
-	}
-
-	var r1 error
-	if rf, ok := ret.Get(1).(func(cidsdk.ArtifactByteArrayRequest) error); ok {
-		r1 = rf(request)
-	} else {
-		r1 = ret.Error(1)
-	}
-
-	return r0, r1
-}
-
 // ArtifactDownload provides a mock function with given fields: request
 func (_m *SDKClient) ArtifactDownload(request cidsdk.ArtifactDownloadRequest) error {
 	ret := _m.Called(request)
@@ -47,6 +24,29 @@ func (_m *SDKClient) ArtifactDownload(request cidsdk.ArtifactDownloadRequest) er
 	}
 
 	return r0
+}
+
+// ArtifactDownloadByteArray provides a mock function with given fields: request
+func (_m *SDKClient) ArtifactDownloadByteArray(request cidsdk.ArtifactDownloadByteArrayRequest) ([]byte, error) {
+	ret := _m.Called(request)
+
+	var r0 []byte
+	if rf, ok := ret.Get(0).(func(cidsdk.ArtifactDownloadByteArrayRequest) []byte); ok {
+		r0 = rf(request)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]byte)
+		}
+	}
+
+	var r1 error
+	if rf, ok := ret.Get(1).(func(cidsdk.ArtifactDownloadByteArrayRequest) error); ok {
+		r1 = rf(request)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // ArtifactList provides a mock function with given fields: request
@@ -78,6 +78,20 @@ func (_m *SDKClient) ArtifactUpload(request cidsdk.ArtifactUploadRequest) error 
 
 	var r0 error
 	if rf, ok := ret.Get(0).(func(cidsdk.ArtifactUploadRequest) error); ok {
+		r0 = rf(request)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// ArtifactUploadByteArray provides a mock function with given fields: request
+func (_m *SDKClient) ArtifactUploadByteArray(request cidsdk.ArtifactUploadByteArrayRequest) error {
+	ret := _m.Called(request)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(cidsdk.ArtifactUploadByteArrayRequest) error); ok {
 		r0 = rf(request)
 	} else {
 		r0 = ret.Error(0)

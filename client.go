@@ -1,6 +1,7 @@
 package cidsdk
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"fmt"
@@ -72,8 +73,9 @@ type SDKClient interface {
 	FileWrite(file string, content []byte) error
 	ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, error)
 	ArtifactUpload(request ArtifactUploadRequest) error
+	ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) error
 	ArtifactDownload(request ArtifactDownloadRequest) error
-	ArtifactByteArray(request ArtifactByteArrayRequest) ([]byte, error)
+	ArtifactDownloadByteArray(request ArtifactDownloadByteArrayRequest) ([]byte, error)
 	UUID() string
 }
 
@@ -282,15 +284,8 @@ type ArtifactUploadRequest struct {
 
 // ArtifactUpload request
 func (sdk SDK) ArtifactUpload(request ArtifactUploadRequest) error {
-	f, err := os.Open(request.File)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
-
 	// upload
 	resp, err := sdk.client.R().
-		SetBody(f).
 		SetFormData(map[string]string{
 			"type":           request.Type,
 			"module":         request.Module,
@@ -298,6 +293,38 @@ func (sdk SDK) ArtifactUpload(request ArtifactUploadRequest) error {
 			"format_version": request.FormatVersion,
 		}).
 		SetFile("file", request.File).
+		SetContentLength(true).
+		SetError(&APIError{}).
+		Post("/artifact")
+	if err != nil {
+		return err
+	} else if resp.IsError() {
+		return resp.Error().(*APIError)
+	}
+
+	return nil
+}
+
+type ArtifactUploadByteArrayRequest struct {
+	File          string `json:"file"`
+	Content       []byte `json:"content"`
+	Module        string `json:"module"`
+	Type          string `json:"type"`
+	Format        string `json:"format"`
+	FormatVersion string `json:"format_version"`
+}
+
+// ArtifactUploadByteArray request
+func (sdk SDK) ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) error {
+	// upload
+	resp, err := sdk.client.R().
+		SetFormData(map[string]string{
+			"type":           request.Type,
+			"module":         request.Module,
+			"format":         request.Format,
+			"format_version": request.FormatVersion,
+		}).
+		SetFileReader("file", request.File, bytes.NewReader(request.Content)).
 		SetContentLength(true).
 		SetError(&APIError{}).
 		Post("/artifact")
@@ -335,14 +362,14 @@ func (sdk SDK) ArtifactDownload(request ArtifactDownloadRequest) error {
 	return nil
 }
 
-type ArtifactByteArrayRequest struct {
+type ArtifactDownloadByteArrayRequest struct {
 	Module string `json:"module"`
 	Type   string `json:"type"`
 	Name   string `json:"name"`
 }
 
-// ArtifactByteArray request
-func (sdk SDK) ArtifactByteArray(request ArtifactByteArrayRequest) ([]byte, error) {
+// ArtifactDownloadByteArray request
+func (sdk SDK) ArtifactDownloadByteArray(request ArtifactDownloadByteArrayRequest) ([]byte, error) {
 	resp, err := sdk.client.R().
 		SetQueryParam("module", request.Module).
 		SetQueryParam("type", request.Type).
