@@ -55,6 +55,11 @@ func (sdk SDK) ProjectAction(cfg any) (ProjectActionData, error) {
 		return ProjectActionData{}, err
 	}
 
+	env, err := sdk.Env()
+	if err != nil {
+		return ProjectActionData{}, err
+	}
+
 	if config.Config != "" && cfg != nil {
 		err := json.Unmarshal([]byte(config.Config), cfg)
 		if err != nil {
@@ -70,5 +75,5 @@ func (sdk SDK) ProjectAction(cfg any) (ProjectActionData, error) {
 		return ProjectActionData{}, err
 	}
 
-	return ProjectActionData{ProjectDir: config.ProjectDir, Config: *config, Modules: *modules}, nil
+	return ProjectActionData{ProjectDir: config.ProjectDir, Config: *config, Modules: *modules, Env: env}, nil
 }
