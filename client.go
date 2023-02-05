@@ -64,7 +64,7 @@ type SDKClient interface {
 	VCSCommits(request VCSCommitsRequest) (*[]VCSCommit, error)
 	VCSCommitByHash(request VCSCommitByHashRequest) (*VCSCommit, error)
 	VCSTags() (*[]VCSTag, error)
-	VCSReleases() (*[]VCSRelease, error)
+	VCSReleases(request VCSReleasesRequest) (*[]VCSRelease, error)
 	ExecuteCommand(req ExecuteCommandRequest) (*ExecuteCommandResponse, error)
 	FileRead(file string) (string, error)
 	FileList(req FileRequest) (files []File, err error)
@@ -232,13 +232,17 @@ func (sdk SDK) VCSTags() (*[]VCSTag, error) {
 	}
 }
 
+type VCSReleasesRequest struct {
+	Type string `json:"type"` // Type of the release: stable, unstable
+}
+
 // VCSReleases request
-func (sdk SDK) VCSReleases() (*[]VCSRelease, error) {
+func (sdk SDK) VCSReleases(request VCSReleasesRequest) (*[]VCSRelease, error) {
 	resp, err := sdk.client.R().
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSRelease{}).
 		SetError(&APIError{}).
-		Get("/vcs/release")
+		Get(fmt.Sprintf("/vcs/release?type=%s", request.Type))
 
 	if err != nil {
 		return nil, err
