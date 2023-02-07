@@ -182,7 +182,7 @@ func (sdk SDK) VCSCommits(request VCSCommitsRequest) (*[]VCSCommit, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSCommit{}).
 		SetError(&APIError{}).
-		Get(fmt.Sprintf("/vcs/commit?from=%s&to=%schanges=%s&limit=%s", request.FromHash, request.ToHash, strconv.FormatBool(request.IncludeChanges), strconv.Itoa(request.Limit)))
+		Get(fmt.Sprintf("/vcs/commit?from=%s&to=%s&changes=%s&limit=%s", request.FromHash, request.ToHash, strconv.FormatBool(request.IncludeChanges), strconv.Itoa(request.Limit)))
 
 	if err != nil {
 		return nil, err
