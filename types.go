@@ -150,6 +150,7 @@ const (
 type ActionArtifact struct {
 	BuildID       string             `json:"build_id,omitempty"`
 	JobID         string             `json:"job_id,omitempty"`
+	ID            string             `json:"id,omitempty"`
 	Module        string             `json:"module,omitempty"`
 	Type          ActionArtifactType `json:"type,omitempty"`
 	Name          string             `json:"name,omitempty"`

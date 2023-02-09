@@ -10,6 +10,7 @@ const (
 	LanguageJavascript ProjectLanguage = "javascript"
 	LanguageTypescript ProjectLanguage = "typescript"
 	LanguagePython     ProjectLanguage = "python"
+	LanguagePHP        ProjectLanguage = "php"
 )
 
 type ProjectBuildSystem string
@@ -26,6 +27,8 @@ const (
 	BuildSystemPipfile         ProjectBuildSystem = "pipfile"
 	BuildSystemSetupPy         ProjectBuildSystem = "setup.py"
 	BuildSystemMkdocs          ProjectBuildSystem = "mkdocs"
+	BuildSystemComposer        ProjectBuildSystem = "composer"
+	BuildSystemDotNet          ProjectBuildSystem = "dotnet"
 )
 
 type ProjectBuildSystemSyntax string

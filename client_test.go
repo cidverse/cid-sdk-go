@@ -1,9 +1,10 @@
 package cidsdk
 
 import (
-	"github.com/stretchr/testify/assert"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestSDKHealth(t *testing.T) {
