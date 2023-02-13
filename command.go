@@ -16,6 +16,9 @@ type ExecuteCommandRequest struct {
 
 	// Ports that will be exposed
 	Ports []int `json:"ports,omitempty"`
+
+	// A version Constraint for the binary used in command
+	Constraint []int `json:"constraint,omitempty"`
 }
 
 // ExecuteCommandResponse defines model for ExecuteCommandResponse.
