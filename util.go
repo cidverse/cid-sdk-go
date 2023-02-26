@@ -5,10 +5,10 @@ import (
 	"path/filepath"
 )
 
-var joinSeparator = ""
+var JoinSeparator = ""
 
 func JoinPath(elem ...string) string {
-	if joinSeparator == "/" {
+	if JoinSeparator == "/" {
 		return path.Join(elem...)
 	}
 

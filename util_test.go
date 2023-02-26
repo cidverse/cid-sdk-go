@@ -9,11 +9,11 @@ import (
 )
 
 func TestJoinPathForTestCases(t *testing.T) {
-	joinSeparator = "/"
+	JoinSeparator = "/"
 	assert.Equal(t, `my-dir/my-file`, JoinPath("my-dir", "my-file"))
 }
 
 func TestJoinPath(t *testing.T) {
-	joinSeparator = ""
+	JoinSeparator = ""
 	assert.Equal(t, fmt.Sprintf(`my-dir%cmy-file`, os.PathSeparator), JoinPath("my-dir", "my-file"))
 }
