@@ -71,6 +71,7 @@ type SDKClient interface {
 	FileRename(old string, new string) error
 	FileRemove(file string) error
 	FileWrite(file string, content []byte) error
+	FileExists(file string) bool
 	ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, error)
 	ArtifactUpload(request ArtifactUploadRequest) error
 	ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) error

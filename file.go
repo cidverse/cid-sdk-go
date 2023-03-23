@@ -106,3 +106,12 @@ func (sdk SDK) FileWrite(file string, content []byte) error {
 
 	return nil
 }
+
+// FileExists command
+func (sdk SDK) FileExists(file string) bool {
+	if _, err := os.Stat(file); err == nil {
+		return true
+	}
+
+	return false
+}
