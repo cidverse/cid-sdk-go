@@ -72,6 +72,8 @@ type SDKClient interface {
 	FileRemove(file string) error
 	FileWrite(file string, content []byte) error
 	FileExists(file string) bool
+	ZIPCreate(inputDirectory string, archiveFile string) error
+	ZIPExtract(archiveFile string, outputDirectory string) error
 	ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, error)
 	ArtifactUpload(request ArtifactUploadRequest) error
 	ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) error
