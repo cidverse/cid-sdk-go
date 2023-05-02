@@ -289,7 +289,7 @@ type ArtifactUploadRequest struct {
 	Type          string `json:"type"`
 	Format        string `json:"format"`
 	FormatVersion string `json:"format_version"`
-	Extract       bool   `json:"extract"`
+	ExtractFile   bool   `json:"extract_file"`
 }
 
 // ArtifactUpload request
@@ -301,8 +301,8 @@ func (sdk SDK) ArtifactUpload(request ArtifactUploadRequest) error {
 		"format":         request.Format,
 		"format_version": request.FormatVersion,
 	}
-	if request.Extract {
-		payload["extract"] = "true"
+	if request.ExtractFile {
+		payload["extract_file"] = "true"
 	}
 	resp, err := sdk.client.R().
 		SetFormData(payload).
@@ -326,7 +326,7 @@ type ArtifactUploadByteArrayRequest struct {
 	Type          string `json:"type"`
 	Format        string `json:"format"`
 	FormatVersion string `json:"format_version"`
-	Extract       bool   `json:"extract"`
+	ExtractFile   bool   `json:"extract_file"`
 }
 
 // ArtifactUploadByteArray request
@@ -338,8 +338,8 @@ func (sdk SDK) ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) e
 		"format":         request.Format,
 		"format_version": request.FormatVersion,
 	}
-	if request.Extract {
-		payload["extract"] = "true"
+	if request.ExtractFile {
+		payload["extract_file"] = "true"
 	}
 	resp, err := sdk.client.R().
 		SetFormData(payload).
