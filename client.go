@@ -74,6 +74,8 @@ type SDKClient interface {
 	FileExists(file string) bool
 	ZIPCreate(inputDirectory string, archiveFile string) error
 	ZIPExtract(archiveFile string, outputDirectory string) error
+	TARCreate(inputDirectory string, archiveFile string) error
+	TARExtract(archiveFile string, outputDirectory string) error
 	ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, error)
 	ArtifactUpload(request ArtifactUploadRequest) error
 	ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) error
@@ -287,18 +289,23 @@ type ArtifactUploadRequest struct {
 	Type          string `json:"type"`
 	Format        string `json:"format"`
 	FormatVersion string `json:"format_version"`
+	Extract       bool   `json:"extract"`
 }
 
 // ArtifactUpload request
 func (sdk SDK) ArtifactUpload(request ArtifactUploadRequest) error {
 	// upload
+	payload := map[string]string{
+		"type":           request.Type,
+		"module":         request.Module,
+		"format":         request.Format,
+		"format_version": request.FormatVersion,
+	}
+	if request.Extract {
+		payload["extract"] = "true"
+	}
 	resp, err := sdk.client.R().
-		SetFormData(map[string]string{
-			"type":           request.Type,
-			"module":         request.Module,
-			"format":         request.Format,
-			"format_version": request.FormatVersion,
-		}).
+		SetFormData(payload).
 		SetFile("file", request.File).
 		SetContentLength(true).
 		SetError(&APIError{}).
@@ -319,18 +326,23 @@ type ArtifactUploadByteArrayRequest struct {
 	Type          string `json:"type"`
 	Format        string `json:"format"`
 	FormatVersion string `json:"format_version"`
+	Extract       bool   `json:"extract"`
 }
 
 // ArtifactUploadByteArray request
 func (sdk SDK) ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) error {
 	// upload
+	payload := map[string]string{
+		"type":           request.Type,
+		"module":         request.Module,
+		"format":         request.Format,
+		"format_version": request.FormatVersion,
+	}
+	if request.Extract {
+		payload["extract"] = "true"
+	}
 	resp, err := sdk.client.R().
-		SetFormData(map[string]string{
-			"type":           request.Type,
-			"module":         request.Module,
-			"format":         request.Format,
-			"format_version": request.FormatVersion,
-		}).
+		SetFormData(payload).
 		SetFileReader("file", request.File, bytes.NewReader(request.Content)).
 		SetContentLength(true).
 		SetError(&APIError{}).

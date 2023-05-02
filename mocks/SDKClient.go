@@ -421,6 +421,34 @@ func (_m *SDKClient) ProjectAction(cfg interface{}) (cidsdk.ProjectActionData, e
 	return r0, r1
 }
 
+// TARCreate provides a mock function with given fields: inputDirectory, archiveFile
+func (_m *SDKClient) TARCreate(inputDirectory string, archiveFile string) error {
+	ret := _m.Called(inputDirectory, archiveFile)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, string) error); ok {
+		r0 = rf(inputDirectory, archiveFile)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// TARExtract provides a mock function with given fields: archiveFile, outputDirectory
+func (_m *SDKClient) TARExtract(archiveFile string, outputDirectory string) error {
+	ret := _m.Called(archiveFile, outputDirectory)
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func(string, string) error); ok {
+		r0 = rf(archiveFile, outputDirectory)
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
 // UUID provides a mock function with given fields:
 func (_m *SDKClient) UUID() string {
 	ret := _m.Called()

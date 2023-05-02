@@ -1,3 +1,5 @@
+github.com/cidverse/cidverseutils v0.0.0-20230502162205-0dc75f0de724 h1:gs7j1sdbJiYhoH94iPUvi6uGsT2ckXxx9/sUI2qx2Z8=
+github.com/cidverse/cidverseutils v0.0.0-20230502162205-0dc75f0de724/go.mod h1:U0fETHkZhDcPfUSArfxwYQiw7SisClXg+A6clzCtAPk=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
