@@ -259,11 +259,7 @@ func (sdk SDK) VCSReleases(request VCSReleasesRequest) (*[]VCSRelease, error) {
 }
 
 type ArtifactListRequest struct {
-	Module        string `json:"module"`
-	ArtifactType  string `json:"type"`
-	Name          string `json:"name"`
-	Format        string `json:"format"`
-	FormatVersion string `json:"format_version"`
+	Query string `json:"query"`
 }
 
 // ArtifactList request
@@ -272,7 +268,7 @@ func (sdk SDK) ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, err
 		SetHeader("Accept", "application/json").
 		SetResult(&[]ActionArtifact{}).
 		SetError(&APIError{}).
-		Get(fmt.Sprintf("/artifact?module=%s&type=%s&name=%s&format=%s&format_version=%s", request.Module, request.ArtifactType, request.Name, request.Format, request.FormatVersion))
+		Get(fmt.Sprintf("/artifact?query=%s", request.Query))
 
 	if err != nil {
 		return nil, err
