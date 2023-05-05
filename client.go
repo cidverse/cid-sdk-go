@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"time"
@@ -268,7 +269,7 @@ func (sdk SDK) ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, err
 		SetHeader("Accept", "application/json").
 		SetResult(&[]ActionArtifact{}).
 		SetError(&APIError{}).
-		Get(fmt.Sprintf("/artifact?query=%s", request.Query))
+		Get(fmt.Sprintf("/artifact?query=%s", url.QueryEscape(request.Query)))
 
 	if err != nil {
 		return nil, err
