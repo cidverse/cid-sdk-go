@@ -355,9 +355,6 @@ func (sdk SDK) ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) e
 
 type ArtifactDownloadRequest struct {
 	ID         string `json:"id"`
-	Module     string `json:"module"`
-	Type       string `json:"type"`
-	Name       string `json:"name"`
 	TargetFile string `json:"target_file"`
 }
 
@@ -365,9 +362,6 @@ type ArtifactDownloadRequest struct {
 func (sdk SDK) ArtifactDownload(request ArtifactDownloadRequest) error {
 	resp, err := sdk.client.R().
 		SetQueryParam("id", request.ID).
-		SetQueryParam("module", request.Module).
-		SetQueryParam("type", request.Type).
-		SetQueryParam("name", request.Name).
 		SetOutput(request.TargetFile).
 		SetError(&APIError{}).
 		Get("/artifact/download")
@@ -381,19 +375,13 @@ func (sdk SDK) ArtifactDownload(request ArtifactDownloadRequest) error {
 }
 
 type ArtifactDownloadByteArrayRequest struct {
-	ID     string `json:"id"`
-	Module string `json:"module"`
-	Type   string `json:"type"`
-	Name   string `json:"name"`
+	ID string `json:"id"`
 }
 
 // ArtifactDownloadByteArray request
 func (sdk SDK) ArtifactDownloadByteArray(request ArtifactDownloadByteArrayRequest) ([]byte, error) {
 	resp, err := sdk.client.R().
 		SetQueryParam("id", request.ID).
-		SetQueryParam("module", request.Module).
-		SetQueryParam("type", request.Type).
-		SetQueryParam("name", request.Name).
 		SetError(&APIError{}).
 		Get("/artifact/download")
 	if err != nil {
