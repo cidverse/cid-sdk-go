@@ -92,20 +92,6 @@ func (_m *SDKClient) ArtifactUpload(request cidsdk.ArtifactUploadRequest) error 
 	return r0
 }
 
-// ArtifactUploadByteArray provides a mock function with given fields: request
-func (_m *SDKClient) ArtifactUploadByteArray(request cidsdk.ArtifactUploadByteArrayRequest) error {
-	ret := _m.Called(request)
-
-	var r0 error
-	if rf, ok := ret.Get(0).(func(cidsdk.ArtifactUploadByteArrayRequest) error); ok {
-		r0 = rf(request)
-	} else {
-		r0 = ret.Error(0)
-	}
-
-	return r0
-}
-
 // CurrentConfig provides a mock function with given fields:
 func (_m *SDKClient) CurrentConfig() (*cidsdk.CurrentConfig, error) {
 	ret := _m.Called()

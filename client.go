@@ -5,11 +5,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io"
 	"net"
 	"net/http"
 	"net/url"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-resty/resty/v2"
@@ -79,7 +81,6 @@ type SDKClient interface {
 	TARExtract(archiveFile string, outputDirectory string) error
 	ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, error)
 	ArtifactUpload(request ArtifactUploadRequest) error
-	ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) error
 	ArtifactDownload(request ArtifactDownloadRequest) error
 	ArtifactDownloadByteArray(request ArtifactDownloadByteArrayRequest) ([]byte, error)
 	UUID() string
@@ -282,6 +283,8 @@ func (sdk SDK) ArtifactList(request ArtifactListRequest) (*[]ActionArtifact, err
 
 type ArtifactUploadRequest struct {
 	File          string `json:"file"`
+	Content       string `json:"content"`
+	ContentBytes  []byte `json:"content_bytes"`
 	Module        string `json:"module"`
 	Type          string `json:"type"`
 	Format        string `json:"format"`
@@ -301,53 +304,40 @@ func (sdk SDK) ArtifactUpload(request ArtifactUploadRequest) error {
 	if request.ExtractFile {
 		payload["extract_file"] = "true"
 	}
-	resp, err := sdk.client.R().
-		SetFormData(payload).
-		SetFile("file", request.File).
-		SetContentLength(true).
-		SetError(&APIError{}).
-		Post("/artifact")
-	if err != nil {
-		return err
-	} else if resp.IsError() {
-		return resp.Error().(*APIError)
-	}
 
-	return nil
-}
+	if request.Content != "" || request.ContentBytes != nil {
+		var reader io.Reader
+		if request.Content != "" {
+			reader = strings.NewReader(request.Content)
+		} else {
+			reader = bytes.NewReader(request.ContentBytes)
+		}
 
-type ArtifactUploadByteArrayRequest struct {
-	File          string `json:"file"`
-	Content       []byte `json:"content"`
-	Module        string `json:"module"`
-	Type          string `json:"type"`
-	Format        string `json:"format"`
-	FormatVersion string `json:"format_version"`
-	ExtractFile   bool   `json:"extract_file"`
-}
-
-// ArtifactUploadByteArray request
-func (sdk SDK) ArtifactUploadByteArray(request ArtifactUploadByteArrayRequest) error {
-	// upload
-	payload := map[string]string{
-		"type":           request.Type,
-		"module":         request.Module,
-		"format":         request.Format,
-		"format_version": request.FormatVersion,
-	}
-	if request.ExtractFile {
-		payload["extract_file"] = "true"
-	}
-	resp, err := sdk.client.R().
-		SetFormData(payload).
-		SetFileReader("file", request.File, bytes.NewReader(request.Content)).
-		SetContentLength(true).
-		SetError(&APIError{}).
-		Post("/artifact")
-	if err != nil {
-		return err
-	} else if resp.IsError() {
-		return resp.Error().(*APIError)
+		resp, err := sdk.client.R().
+			SetFormData(payload).
+			SetFileReader("file", request.File, reader).
+			SetContentLength(true).
+			SetError(&APIError{}).
+			Post("/artifact")
+		if err != nil {
+			return err
+		} else if resp.IsError() {
+			return resp.Error().(*APIError)
+		}
+	} else if request.File != "" {
+		resp, err := sdk.client.R().
+			SetFormData(payload).
+			SetFile("file", request.File).
+			SetContentLength(true).
+			SetError(&APIError{}).
+			Post("/artifact")
+		if err != nil {
+			return err
+		} else if resp.IsError() {
+			return resp.Error().(*APIError)
+		}
+	} else {
+		return fmt.Errorf("file, content or contentBytes must be provided")
 	}
 
 	return nil
