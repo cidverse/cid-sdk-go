@@ -139,6 +139,17 @@ type VCSFile struct {
 	Hash string `json:"hash,omitempty"`
 }
 
+type VCSDiff struct {
+	FileFrom VCSFile       `json:"file_from"`
+	FileTo   VCSFile       `json:"file_to"`
+	Lines    []VCSDiffLine `json:"lines,omitempty"`
+}
+
+type VCSDiffLine struct {
+	Operation int    `json:"operation"`
+	Content   string `json:"content"`
+}
+
 // ActionArtifact contains information about generated artifacts
 type ActionArtifact struct {
 	BuildID       string `json:"build_id,omitempty"`

@@ -68,6 +68,7 @@ type SDKClient interface {
 	VCSCommitByHash(request VCSCommitByHashRequest) (*VCSCommit, error)
 	VCSTags() (*[]VCSTag, error)
 	VCSReleases(request VCSReleasesRequest) (*[]VCSRelease, error)
+	VCSDiff(request VCSDiffRequest) (*[]VCSDiff, error)
 	ExecuteCommand(req ExecuteCommandRequest) (*ExecuteCommandResponse, error)
 	FileRead(file string) (string, error)
 	FileList(req FileRequest) (files []File, err error)
@@ -255,6 +256,28 @@ func (sdk SDK) VCSReleases(request VCSReleasesRequest) (*[]VCSRelease, error) {
 		return nil, err
 	} else if resp.IsSuccess() {
 		return resp.Result().(*[]VCSRelease), nil
+	} else {
+		return nil, resp.Error().(*APIError)
+	}
+}
+
+type VCSDiffRequest struct {
+	FromHash string `json:"from"`
+	ToHash   string `json:"to"`
+}
+
+// VCSDiff request
+func (sdk SDK) VCSDiff(request VCSDiffRequest) (*[]VCSDiff, error) {
+	resp, err := sdk.client.R().
+		SetHeader("Accept", "application/json").
+		SetResult(&[]VCSDiff{}).
+		SetError(&APIError{}).
+		Get(fmt.Sprintf("/vcs/diff?from=%s&to=%s", request.FromHash, request.ToHash))
+
+	if err != nil {
+		return nil, err
+	} else if resp.IsSuccess() {
+		return resp.Result().(*[]VCSDiff), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
