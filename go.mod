@@ -3,7 +3,7 @@ module github.com/cidverse/cid-sdk-go
 go 1.21
 
 require (
-	github.com/cidverse/cidverseutils v0.0.0-20231103225801-e7f71d0c6aba
+	github.com/cidverse/cidverseutils v0.0.0-20240426222640-9d7a9ba21c1b
 	github.com/go-resty/resty/v2 v2.12.0
 	github.com/google/uuid v1.6.0
 	github.com/otiai10/copy v1.14.0
