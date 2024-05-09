@@ -1,26 +1,25 @@
 package cidsdk
 
 import (
-	"github.com/cidverse/cidverseutils/pkg/archive/tar"
-	"github.com/cidverse/cidverseutils/pkg/archive/zip"
+	"github.com/cidverse/cidverseutils/compress"
 )
 
 // ZIPCreate creates a zip archive of the directory at the given path.
 func (sdk SDK) ZIPCreate(inputDirectory string, outputFile string) error {
-	return zip.Create(inputDirectory, outputFile)
+	return compress.ZIPCreate(inputDirectory, outputFile)
 }
 
 // ZIPExtract unzips the zip archive at the given path into the given directory.
 func (sdk SDK) ZIPExtract(archiveFile string, outputDirectory string) error {
-	return zip.Extract(archiveFile, outputDirectory)
+	return compress.ZIPExtract(archiveFile, outputDirectory)
 }
 
 // TARCreate creates a tar archive of the directory at the given path.
 func (sdk SDK) TARCreate(inputDirectory string, outputFile string) error {
-	return tar.Create(inputDirectory, outputFile)
+	return compress.TARCreate(inputDirectory, outputFile)
 }
 
 // TARExtract extracts a tar archive at the given path into the given directory.
 func (sdk SDK) TARExtract(archiveFile string, outputDirectory string) error {
-	return tar.Extract(archiveFile, outputDirectory)
+	return compress.TARExtract(archiveFile, outputDirectory)
 }
