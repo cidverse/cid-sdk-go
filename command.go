@@ -49,7 +49,7 @@ func (sdk SDK) ExecuteCommand(req ExecuteCommandRequest) (*ExecuteCommandRespons
 		SetBody(req).
 		SetResult(&ExecuteCommandResponse{}).
 		SetError(&APIError{}).
-		Post("/command")
+		Post("/v1/command/execute")
 
 	if err != nil {
 		return nil, err

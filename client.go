@@ -97,7 +97,7 @@ func (sdk SDK) Health() (*HealthcheckResponse, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&HealthcheckResponse{}).
 		SetError(&APIError{}).
-		Get("/health")
+		Get("/v1/health")
 
 	if err != nil {
 		return nil, err
@@ -115,7 +115,7 @@ func (sdk SDK) Env() (map[string]string, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&map[string]string{}).
 		SetError(&APIError{}).
-		Get("/env")
+		Get("/v1/job/env")
 
 	if err != nil {
 		return nil, err
@@ -132,7 +132,7 @@ func (sdk SDK) CurrentConfig() (*CurrentConfig, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&CurrentConfig{}).
 		SetError(&APIError{}).
-		Get("/config/current")
+		Get("/v1/job/config")
 
 	if err != nil {
 		return nil, err
@@ -149,7 +149,7 @@ func (sdk SDK) Modules() (*[]ProjectModule, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&[]ProjectModule{}).
 		SetError(&APIError{}).
-		Get("/module")
+		Get("/v1/repoanalyzer/module")
 
 	if err != nil {
 		return nil, err
@@ -166,7 +166,7 @@ func (sdk SDK) CurrentModule() (*ProjectModule, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&ProjectModule{}).
 		SetError(&APIError{}).
-		Get("/module/current")
+		Get("/v1/job/module")
 
 	if err != nil {
 		return nil, err
@@ -190,7 +190,7 @@ func (sdk SDK) VCSCommits(request VCSCommitsRequest) (*[]VCSCommit, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSCommit{}).
 		SetError(&APIError{}).
-		Get(fmt.Sprintf("/vcs/commit?from=%s&to=%s&changes=%s&limit=%s", request.FromHash, request.ToHash, strconv.FormatBool(request.IncludeChanges), strconv.Itoa(request.Limit)))
+		Get(fmt.Sprintf("/v1/vcs/commit?from=%s&to=%s&changes=%s&limit=%s", request.FromHash, request.ToHash, strconv.FormatBool(request.IncludeChanges), strconv.Itoa(request.Limit)))
 
 	if err != nil {
 		return nil, err
@@ -212,7 +212,7 @@ func (sdk SDK) VCSCommitByHash(request VCSCommitByHashRequest) (*VCSCommit, erro
 		SetHeader("Accept", "application/json").
 		SetResult(&VCSCommit{}).
 		SetError(&APIError{}).
-		Get(fmt.Sprintf("/vcs/commit/%s?changes=%s", request.Hash, strconv.FormatBool(request.IncludeChanges)))
+		Get(fmt.Sprintf("/v1/vcs/commit/%s?changes=%s", request.Hash, strconv.FormatBool(request.IncludeChanges)))
 
 	if err != nil {
 		return nil, err
@@ -229,7 +229,7 @@ func (sdk SDK) VCSTags() (*[]VCSTag, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSTag{}).
 		SetError(&APIError{}).
-		Get("/vcs/tag")
+		Get("/v1/vcs/tag")
 
 	if err != nil {
 		return nil, err
@@ -250,7 +250,7 @@ func (sdk SDK) VCSReleases(request VCSReleasesRequest) (*[]VCSRelease, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSRelease{}).
 		SetError(&APIError{}).
-		Get(fmt.Sprintf("/vcs/release?type=%s", request.Type))
+		Get(fmt.Sprintf("/v1/vcs/release?type=%s", request.Type))
 
 	if err != nil {
 		return nil, err
@@ -272,7 +272,7 @@ func (sdk SDK) VCSDiff(request VCSDiffRequest) (*[]VCSDiff, error) {
 		SetHeader("Accept", "application/json").
 		SetResult(&[]VCSDiff{}).
 		SetError(&APIError{}).
-		Get(fmt.Sprintf("/vcs/diff?from=%s&to=%s", request.FromHash, request.ToHash))
+		Get(fmt.Sprintf("/v1/vcs/diff?from=%s&to=%s", request.FromHash, request.ToHash))
 
 	if err != nil {
 		return nil, err

@@ -12,7 +12,7 @@ func (sdk SDK) Log(req LogMessageRequest) error {
 		SetHeader("Accept", "application/json").
 		SetBody(req).
 		SetError(&APIError{}).
-		Post("/log")
+		Post("/v1/log")
 
 	if err != nil {
 		return err
