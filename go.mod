@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/cidverse/cidverseutils/compress v0.1.1
-	github.com/go-resty/resty/v2 v2.15.3
+	github.com/go-resty/resty/v2 v2.16.0
 	github.com/google/uuid v1.6.0
 	github.com/otiai10/copy v1.14.0
 	github.com/stretchr/testify v1.9.0
