@@ -72,11 +72,17 @@ type ProjectModule struct {
 	// Slug module name
 	Slug string `json:"slug,omitempty"`
 
+	// Type is the module type
+	Type string `json:"type,omitempty"`
+
 	// BuildSystem module name
 	BuildSystem string `json:"build_system,omitempty"`
 
 	// BuildSystemSyntax module name
 	BuildSystemSyntax string `json:"build_system_syntax,omitempty"`
+
+	// SpecificationType is the type of the specification
+	SpecificationType string `json:"specification_type,omitempty"`
 
 	// Language module name
 	Language *map[string]string `json:"language,omitempty"`
