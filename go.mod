@@ -2,7 +2,7 @@ module github.com/cidverse/cid-sdk-go
 
 go 1.22.0
 
-toolchain go1.23.3
+toolchain go1.23.4
 
 require (
 	github.com/cidverse/cidverseutils/compress v0.1.1
