@@ -6,7 +6,7 @@ toolchain go1.23.5
 
 require (
 	github.com/cidverse/cidverseutils/compress v0.1.1
-	github.com/go-resty/resty/v2 v2.16.4
+	github.com/go-resty/resty/v2 v2.16.5
 	github.com/google/uuid v1.6.0
 	github.com/otiai10/copy v1.14.1
 	github.com/stretchr/testify v1.10.0
