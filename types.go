@@ -18,7 +18,47 @@ func (e *APIError) Error() string {
 
 // Action is the common interface for all actions
 type Action interface {
+	Metadata() ActionMetadata
 	Execute() error
+}
+
+type ActionMetadata struct {
+	Name        string            `json:"name"`
+	Description string            `json:"description"`
+	Category    string            `json:"category"`
+	Scope       ActionScope       `json:"scope"`
+	Links       map[string]string `json:"links,omitempty"`
+	Rules       []ActionRule      `json:"rules,omitempty"`  // Rules define conditions that must be met for the action to be executed
+	Access      ActionAccess      `json:"access,omitempty"` // Access defines resources that the action may access
+}
+
+type ActionScope string
+
+const (
+	ActionScopeProject ActionScope = "project"
+	ActionScopeModule  ActionScope = "module"
+)
+
+type ActionRule struct {
+	Type       string `json:"type"`
+	Expression string `json:"expression"`
+}
+
+type ActionAccess struct {
+	Environment []ActionAccessEnv        `json:"env,omitempty"`         // Environment variables that the action may access during execution
+	Executables []ActionAccessExecutable `json:"executables,omitempty"` // Executables that the action may invoke during execution
+}
+
+type ActionAccessEnv struct {
+	Name        string `json:"name"`
+	Description string `json:"description"`
+	Pattern     bool   `json:"pattern,omitempty"`
+	Required    bool   `json:"required,omitempty"`
+}
+
+type ActionAccessExecutable struct {
+	Name       string `json:"name"`
+	Constraint string `json:"constraint,omitempty"`
 }
 
 // HealthcheckResponse defines model for HealthcheckResponse.
@@ -83,6 +123,12 @@ type ProjectModule struct {
 
 	// SpecificationType is the type of the specification
 	SpecificationType string `json:"specification_type,omitempty"`
+
+	// ConfigType is the type of the configuration
+	ConfigType string `json:"config_type,omitempty"`
+
+	// DeploymentType is the type of the deployment
+	DeploymentType string `json:"deployment_type,omitempty"`
 
 	// Language module name
 	Language *map[string]string `json:"language,omitempty"`
