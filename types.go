@@ -118,50 +118,22 @@ func (c CurrentConfig) DebugFlag(id string, flag string) string {
 
 // ProjectModule defines model for ProjectModule.
 type ProjectModule struct {
-	// ProjectDir project root directory
-	ProjectDir string `json:"project_dir,omitempty"`
-
-	// ModuleDir module root directory
-	ModuleDir string `json:"module_dir,omitempty"`
-
-	// Discovery module detected based on
-	Discovery []ProjectModuleDiscovery `json:"discovery,omitempty"`
-
-	// Name module name
-	Name string `json:"name,omitempty"`
-
-	// Slug module name
-	Slug string `json:"slug,omitempty"`
-
-	// Type is the module type
-	Type string `json:"type,omitempty"`
-
-	// BuildSystem module name
-	BuildSystem string `json:"build_system,omitempty"`
-
-	// BuildSystemSyntax module name
-	BuildSystemSyntax string `json:"build_system_syntax,omitempty"`
-
-	// SpecificationType is the type of the specification
-	SpecificationType string `json:"specification_type,omitempty"`
-
-	// ConfigType is the type of the configuration
-	ConfigType string `json:"config_type,omitempty"`
-
-	// DeploymentType is the type of the deployment
-	DeploymentType string `json:"deployment_type,omitempty"`
-
-	// Language module name
-	Language *map[string]string `json:"language,omitempty"`
-
-	// Dependencies module name
-	Dependencies *[]ProjectDependency `json:"dependencies,omitempty"`
-
-	// Files all files in the project directory
-	Files []string `json:"files,omitempty"`
-
-	// Submodules submodules
-	Submodules *[]ProjectModule `json:"submodules,omitempty"`
+	ProjectDir        string                   `json:"project_dir,omitempty"`         // ProjectDir project root directory
+	ModuleDir         string                   `json:"module_dir,omitempty"`          // ModuleDir module root directory
+	Discovery         []ProjectModuleDiscovery `json:"discovery,omitempty"`           // Discovery module detected based on
+	Name              string                   `json:"name,omitempty"`                // Name module name
+	Slug              string                   `json:"slug,omitempty"`                // Slug module name
+	Type              string                   `json:"type,omitempty"`                // Type is the module type
+	BuildSystem       string                   `json:"build_system,omitempty"`        // BuildSystem module name
+	BuildSystemSyntax string                   `json:"build_system_syntax,omitempty"` // BuildSystemSyntax module name
+	SpecificationType string                   `json:"specification_type,omitempty"`  // SpecificationType is the type of the specification
+	ConfigType        string                   `json:"config_type,omitempty"`         // ConfigType is the type of the configuration
+	DeploymentSpec    string                   `json:"deployment_spec,omitempty"`     // DeploymentSpec is the kind of deployment specification
+	DeploymentType    string                   `json:"deployment_type,omitempty"`     // DeploymentType is the type of the deployment
+	Language          *map[string]string       `json:"language,omitempty"`            // Language module name
+	Dependencies      *[]ProjectDependency     `json:"dependencies,omitempty"`        // Dependencies module name
+	Files             []string                 `json:"files,omitempty"`               // Files all files in the project directory
+	Submodules        *[]ProjectModule         `json:"submodules,omitempty"`          // Submodules submodules
 }
 
 // ProjectModuleDiscovery contains info on the files used to discover the module
