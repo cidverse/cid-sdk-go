@@ -62,6 +62,7 @@ type SDKClient interface {
 	ProjectAction(cfg any) (ProjectActionData, error)
 	Env() (map[string]string, error)
 	Modules() (*[]ProjectModule, error)
+	Deployment() (*DeploymentResponse, error)
 	CurrentModule() (*ProjectModule, error)
 	CurrentConfig() (*CurrentConfig, error)
 	VCSCommits(request VCSCommitsRequest) (*[]VCSCommit, error)
@@ -172,6 +173,30 @@ func (sdk SDK) CurrentModule() (*ProjectModule, error) {
 		return nil, err
 	} else if resp.IsSuccess() {
 		return resp.Result().(*ProjectModule), nil
+	} else {
+		return nil, resp.Error().(*APIError)
+	}
+}
+
+type DeploymentResponse struct {
+	DeploymentType string            `json:"deployment_type"`
+	DeploymentSpec string            `json:"deployment_spec"`
+	DeploymentFile string            `json:"deployment_file"`
+	Properties     map[string]string `json:"properties"`
+}
+
+// Deployment information request
+func (sdk SDK) Deployment() (*DeploymentResponse, error) {
+	resp, err := sdk.client.R().
+		SetHeader("Accept", "application/json").
+		SetResult(&DeploymentResponse{}).
+		SetError(&APIError{}).
+		Get("/v1/job/deployment")
+
+	if err != nil {
+		return nil, err
+	} else if resp.IsSuccess() {
+		return resp.Result().(*DeploymentResponse), nil
 	} else {
 		return nil, resp.Error().(*APIError)
 	}
