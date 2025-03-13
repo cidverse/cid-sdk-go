@@ -15,9 +15,10 @@ type EnvOverwriteStruct struct {
 func TestEnvOverwrite(t *testing.T) {
 	os.Clearenv()
 	val := EnvOverwriteStruct{Key: "hello", Value: "world"}
-	_ = os.Setenv("KEY", "hi")
-	_ = os.Setenv("VALUE", "mom")
-	OverwriteFromEnv(&val)
+	PopulateFromEnv(&val, map[string]string{
+		"KEY":   "hi",
+		"VALUE": "mom",
+	})
 
 	assert.Equal(t, "hi", val.Key)
 	assert.Equal(t, "mom", val.Value)

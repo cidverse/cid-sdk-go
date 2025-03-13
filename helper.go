@@ -4,20 +4,6 @@ import (
 	"encoding/json"
 )
 
-type ModuleActionData struct {
-	ProjectDir string
-	Module     ProjectModule
-	Config     CurrentConfig
-	Env        map[string]string
-}
-
-type ProjectActionData struct {
-	ProjectDir string
-	Config     CurrentConfig
-	Modules    []ProjectModule
-	Env        map[string]string
-}
-
 // ModuleAction is a utility function to prepare to run a module-scoped action
 func (sdk SDK) ModuleAction(cfg any) (ModuleActionData, error) {
 	config, err := sdk.CurrentConfig()
@@ -42,7 +28,7 @@ func (sdk SDK) ModuleAction(cfg any) (ModuleActionData, error) {
 		}
 
 		// overwrite from env
-		OverwriteFromEnv(cfg)
+		PopulateFromEnv(cfg, nil)
 	}
 
 	return ModuleActionData{ProjectDir: config.ProjectDir, Config: *config, Module: *module, Env: env}, nil
@@ -67,7 +53,7 @@ func (sdk SDK) ProjectAction(cfg any) (ProjectActionData, error) {
 		}
 
 		// overwrite from env
-		OverwriteFromEnv(cfg)
+		PopulateFromEnv(cfg, nil)
 	}
 
 	modules, err := sdk.Modules()

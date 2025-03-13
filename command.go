@@ -5,7 +5,7 @@ type ExecuteCommandRequest struct {
 	// CaptureOutput capture and return the output (stdout and stderr will be passed through if not set)
 	CaptureOutput bool `json:"capture_output,omitempty"`
 
-	// Command command
+	// Command
 	Command string `json:"command,omitempty"`
 
 	// WorkDir directory to execute the command in (default = project root)

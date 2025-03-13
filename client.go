@@ -60,6 +60,8 @@ type SDKClient interface {
 	Log(req LogMessageRequest) error
 	ModuleAction(cfg any) (ModuleActionData, error)
 	ProjectAction(cfg any) (ProjectActionData, error)
+	ModuleActionDataV1() (*ModuleActionData, error)
+	ProjectActionDataV1() (*ProjectActionData, error)
 	Env() (map[string]string, error)
 	Modules() (*[]ProjectModule, error)
 	Deployment() (*DeploymentResponse, error)

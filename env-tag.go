@@ -4,42 +4,78 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 const envVarTag = "env"
 
-// OverwriteFromEnv will overwrite values with the given env values if present
-func OverwriteFromEnv(data interface{}) {
-	val := reflect.ValueOf(data).Elem()
-	t := val.Type()
+// PopulateFromEnv updates struct fields using values from a provided env map.
+func PopulateFromEnv(data interface{}, env map[string]string) {
+	v := reflect.ValueOf(data)
 
-	// check if the type passed in is a struct
-	if t.Kind() != reflect.Struct {
+	// Ensure the input is a pointer to a struct
+	if v.Kind() != reflect.Ptr || v.Elem().Kind() != reflect.Struct {
 		return
 	}
 
-	// iterate over all fields of the struct
+	val := v.Elem()
+	t := val.Type()
+
 	for i := 0; i < t.NumField(); i++ {
 		field := t.Field(i)
-
 		tag := field.Tag.Get(envVarTag)
 		if tag == "" {
 			continue
 		}
-		if envVal, isSet := os.LookupEnv(tag); isSet {
-			fieldVal := val.Field(i)
-			switch fieldVal.Kind() {
-			case reflect.String:
-				fieldVal.SetString(envVal)
-			case reflect.Int:
-				valAsInt, _ := strconv.Atoi(envVal)
-				fieldVal.Set(reflect.ValueOf(valAsInt))
-			case reflect.Bool:
-				valAsBool, _ := strconv.ParseBool(envVal)
-				fieldVal.Set(reflect.ValueOf(valAsBool))
-			default:
-				// unsupported type
+
+		envVal, exists := env[tag]
+		if !exists {
+			continue
+		}
+
+		fieldVal := val.Field(i)
+		if !fieldVal.CanSet() {
+			continue
+		}
+
+		switch fieldVal.Kind() {
+		case reflect.String:
+			fieldVal.SetString(envVal)
+
+		case reflect.Int, reflect.Int64:
+			if parsedVal, err := strconv.ParseInt(envVal, 10, 64); err == nil {
+				fieldVal.SetInt(parsedVal)
 			}
+
+		case reflect.Float64:
+			if parsedVal, err := strconv.ParseFloat(envVal, 64); err == nil {
+				fieldVal.SetFloat(parsedVal)
+			}
+
+		case reflect.Bool:
+			if parsedVal, err := strconv.ParseBool(envVal); err == nil {
+				fieldVal.SetBool(parsedVal)
+			}
+
+		case reflect.Slice:
+			if field.Type.Elem().Kind() == reflect.String {
+				fieldVal.Set(reflect.ValueOf(strings.Split(envVal, ",")))
+			}
+
+		default:
+			// Unsupported type, skipping
 		}
 	}
+}
+
+// EnvMap retrieves all environment variables and returns them as a map.
+func EnvMap() map[string]string {
+	envMap := make(map[string]string)
+	for _, env := range os.Environ() {
+		parts := strings.SplitN(env, "=", 2)
+		if len(parts) == 2 {
+			envMap[parts[0]] = parts[1]
+		}
+	}
+	return envMap
 }

@@ -451,6 +451,36 @@ func (_m *SDKClient) ModuleAction(cfg interface{}) (cidsdk.ModuleActionData, err
 	return r0, r1
 }
 
+// ModuleActionDataV1 provides a mock function with no fields
+func (_m *SDKClient) ModuleActionDataV1() (*cidsdk.ModuleActionData, error) {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for ModuleActionDataV1")
+	}
+
+	var r0 *cidsdk.ModuleActionData
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (*cidsdk.ModuleActionData, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() *cidsdk.ModuleActionData); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*cidsdk.ModuleActionData)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
 // Modules provides a mock function with no fields
 func (_m *SDKClient) Modules() (*[]cidsdk.ProjectModule, error) {
 	ret := _m.Called()
@@ -502,6 +532,36 @@ func (_m *SDKClient) ProjectAction(cfg interface{}) (cidsdk.ProjectActionData, e
 
 	if rf, ok := ret.Get(1).(func(interface{}) error); ok {
 		r1 = rf(cfg)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
+}
+
+// ProjectActionDataV1 provides a mock function with no fields
+func (_m *SDKClient) ProjectActionDataV1() (*cidsdk.ProjectActionData, error) {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for ProjectActionDataV1")
+	}
+
+	var r0 *cidsdk.ProjectActionData
+	var r1 error
+	if rf, ok := ret.Get(0).(func() (*cidsdk.ProjectActionData, error)); ok {
+		return rf()
+	}
+	if rf, ok := ret.Get(0).(func() *cidsdk.ProjectActionData); ok {
+		r0 = rf()
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*cidsdk.ProjectActionData)
+		}
+	}
+
+	if rf, ok := ret.Get(1).(func() error); ok {
+		r1 = rf()
 	} else {
 		r1 = ret.Error(1)
 	}
