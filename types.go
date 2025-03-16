@@ -23,15 +23,16 @@ type Action interface {
 }
 
 type ActionMetadata struct {
-	Name        string            `json:"name"`
-	Description string            `json:"description"`
-	Category    string            `json:"category"`
-	Scope       ActionScope       `json:"scope"`
-	Links       map[string]string `json:"links,omitempty"`
-	Rules       []ActionRule      `json:"rules,omitempty"`  // Rules define conditions that must be met for the action to be executed
-	Access      ActionAccess      `json:"access,omitempty"` // Access defines resources that the action may access
-	Input       ActionInput       `json:"input,omitempty"`  // Input defines the inputs that the action may consume
-	Output      ActionOutput      `json:"output,omitempty"` // Output defines the outputs that the action may produce
+	Name          string            `json:"name"`             // Name is the name of the action
+	Description   string            `json:"description"`      // Description is a short one-line description of the action
+	Documentation string            `json:"documentation"`    // Documentation is a longer multi-line description of the action
+	Category      string            `json:"category"`         // Category is the category of the action, e.g. "build", "test", "deploy"
+	Scope         ActionScope       `json:"scope"`            // Scope of the action, either "project" or "module"
+	Links         map[string]string `json:"links,omitempty"`  // Links to additional documentation
+	Rules         []ActionRule      `json:"rules,omitempty"`  // Rules define conditions that must be met for the action to be executed
+	Access        ActionAccess      `json:"access,omitempty"` // Access defines resources that the action may access
+	Input         ActionInput       `json:"input,omitempty"`  // Input defines the inputs that the action may consume
+	Output        ActionOutput      `json:"output,omitempty"` // Output defines the outputs that the action may produce
 }
 
 type ActionScope string
