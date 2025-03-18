@@ -11,6 +11,10 @@ const envVarTag = "env"
 
 // PopulateFromEnv updates struct fields using values from a provided env map.
 func PopulateFromEnv(data interface{}, env map[string]string) {
+	if data == nil || env == nil {
+		return
+	}
+
 	v := reflect.ValueOf(data)
 
 	// Ensure the input is a pointer to a struct
