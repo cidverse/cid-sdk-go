@@ -181,10 +181,11 @@ func (sdk SDK) CurrentModule() (*ProjectModule, error) {
 }
 
 type DeploymentResponse struct {
-	DeploymentType string            `json:"deployment_type"`
-	DeploymentSpec string            `json:"deployment_spec"`
-	DeploymentFile string            `json:"deployment_file"`
-	Properties     map[string]string `json:"properties"`
+	DeploymentType        string            `json:"deployment_type"`
+	DeploymentSpec        string            `json:"deployment_spec"`
+	DeploymentEnvironment string            `json:"deployment_environment"`
+	DeploymentFile        string            `json:"deployment_file"`
+	Properties            map[string]string `json:"properties"`
 }
 
 // Deployment information request
