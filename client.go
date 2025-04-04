@@ -376,6 +376,10 @@ func (sdk SDK) ArtifactUpload(request ArtifactUploadRequest) error {
 			return resp.Error().(*APIError)
 		}
 	} else if request.File != "" {
+		if _, err := os.Stat(request.File); os.IsNotExist(err) {
+			return fmt.Errorf("file %s does not exist", request.File)
+		}
+
 		resp, err := sdk.client.R().
 			SetFormData(payload).
 			SetFile("file", request.File).
