@@ -33,7 +33,7 @@ func PopulateFromEnv(data interface{}, env map[string]string) {
 		}
 
 		envVal, exists := env[tag]
-		if !exists {
+		if !exists || strings.TrimSpace(envVal) == "" || strings.EqualFold(envVal, "null") {
 			continue
 		}
 
