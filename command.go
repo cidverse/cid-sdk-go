@@ -2,23 +2,14 @@ package cidsdk
 
 // ExecuteCommandRequest defines model for ExecuteCommandRequest.
 type ExecuteCommandRequest struct {
-	// CaptureOutput capture and return the output (stdout and stderr will be passed through if not set)
-	CaptureOutput bool `json:"capture_output,omitempty"`
-
-	// Command
-	Command string `json:"command,omitempty"`
-
-	// WorkDir directory to execute the command in (default = project root)
-	WorkDir string `json:"work_dir,omitempty"`
-
-	// Env contains additional env properties
-	Env map[string]string `json:"env,omitempty"`
-
-	// Ports that will be exposed
-	Ports []int `json:"ports,omitempty"`
-
-	// A version Constraint for the binary used in command
-	Constraint string `json:"constraint,omitempty"`
+	CaptureOutput bool              `json:"capture_output,omitempty"` // CaptureOutput capture and return both stdout and stderr
+	HideStdout    bool              `json:"hide_stdout,omitempty"`    // HideStdout hide the stdout output
+	HideStderr    bool              `json:"hide_stderr,omitempty"`    // HideStderr hide the stderr output
+	Command       string            `json:"command,omitempty"`        // Command
+	WorkDir       string            `json:"work_dir,omitempty"`       // WorkDir directory to execute the command in (default = project root)
+	Env           map[string]string `json:"env,omitempty"`            // Env contains additional env properties
+	Ports         []int             `json:"ports,omitempty"`          // Ports that will be exposed
+	Constraint    string            `json:"constraint,omitempty"`     // A version Constraint for the binary used in command
 }
 
 // ExecuteCommandResponse defines model for ExecuteCommandResponse.
