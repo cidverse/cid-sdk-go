@@ -18,13 +18,27 @@ import (
 )
 
 func NewSDK() (*SDK, error) {
+	return NewSDKWithConfig(SDKConfig{
+		APIAddr:   os.Getenv("CID_API_ADDR"),
+		APISocket: os.Getenv("CID_API_SOCKET"),
+		APISecret: os.Getenv("CID_API_SECRET"),
+	})
+}
+
+type SDKConfig struct {
+	APIAddr   string
+	APISocket string
+	APISecret string
+}
+
+func NewSDKWithConfig(conf SDKConfig) (*SDK, error) {
 	client := resty.New()
 	client.SetDisableWarn(true)
 	client.SetRetryCount(0)
 	client.SetTimeout(60 * time.Minute)
 
 	// socket endpoint
-	unixSocket := os.Getenv("CID_API_SOCKET")
+	unixSocket := conf.APISocket
 	if len(unixSocket) > 0 {
 		transport := http.Transport{
 			DialContext: func(_ context.Context, _ string, _ string) (net.Conn, error) {
@@ -37,13 +51,13 @@ func NewSDK() (*SDK, error) {
 	}
 
 	// http endpoint
-	addr := os.Getenv("CID_API_ADDR")
+	addr := conf.APIAddr
 	if len(addr) > 0 {
 		client.SetBaseURL(addr)
 	}
 
 	// auth
-	secret := os.Getenv("CID_API_SECRET")
+	secret := conf.APISecret
 	if len(secret) > 0 {
 		client.SetAuthScheme("Bearer")
 		client.SetAuthToken(secret)
