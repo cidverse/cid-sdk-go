@@ -23,16 +23,26 @@ type Action interface {
 }
 
 type ActionMetadata struct {
-	Name             string            `json:"name"`              // Name is the name of the action
-	Description      string            `json:"description"`       // Description is a short one-line description of the action
-	Documentation    string            `json:"documentation"`     // Documentation is a longer multi-line description of the action
-	Category         string            `json:"category"`          // Category is the category of the action, e.g. "build", "test", "deploy"
-	Scope            ActionScope       `json:"scope"`             // Scope of the action, either "project" or "module"
-	Links            map[string]string `json:"links,omitempty"`   // Links to additional documentation
-	Rules            []ActionRule      `json:"rules,omitempty"`   // Rules define conditions that must be met for the action to be executed
-	Access           ActionAccess      `json:"access,omitempty"`  // Access defines resources that the action may access
-	Input            ActionInput       `json:"input,omitempty"`   // Input defines the inputs that the action may consume
-	Output           ActionOutput      `json:"output,omitempty"`  // Output defines the outputs that the action may produce
+	Name          string            `json:"name"`             // Name is the name of the action
+	Description   string            `json:"description"`      // Description is a short one-line description of the action
+	Documentation string            `json:"documentation"`    // Documentation is a longer multi-line description of the action
+	Category      string            `json:"category"`         // Category is the category of the action, e.g. "build", "test", "deploy"
+	Scope         ActionScope       `json:"scope"`            // Scope of the action, either "project" or "module"
+	Links         map[string]string `json:"links,omitempty"`  // Links to additional documentation
+	Rules         []ActionRule      `json:"rules,omitempty"`  // Rules define conditions that must be met for the action to be executed
+	Access        ActionAccess      `json:"access,omitempty"` // Access defines resources that the action may access
+	Input         ActionInput       `json:"input,omitempty"`  // Input defines the inputs that the action may consume
+	Output        ActionOutput      `json:"output,omitempty"` // Output defines the outputs that the action may produce
+}
+
+func (am *ActionMetadata) HasOutputWithTypeAndFormat(artifactType string, artifactFormat string) bool {
+	for _, artifact := range am.Output.Artifacts {
+		if artifact.Type == artifactType && artifact.Format == artifactFormat {
+			return true
+		}
+	}
+
+	return false
 }
 
 type ActionScope string
@@ -94,6 +104,7 @@ type ProjectDependency struct {
 	Id      string `json:"id,omitempty"`
 	Type    string `json:"type,omitempty"`
 	Version string `json:"version,omitempty"`
+	Scope   string `json:"scope,omitempty"`
 }
 
 // CurrentConfig defines model for CurrentConfig.
@@ -137,6 +148,20 @@ type ProjectModule struct {
 	Dependencies          *[]ProjectDependency     `json:"dependencies,omitempty"`           // Dependencies module name
 	Files                 []string                 `json:"files,omitempty"`                  // Files all files in the project directory
 	Submodules            *[]ProjectModule         `json:"submodules,omitempty"`             // Submodules submodules
+}
+
+func (module *ProjectModule) HasDependencyByTypeAndId(dependencyType string, dependencyId string) bool {
+	if module.Dependencies == nil {
+		return false
+	}
+
+	for _, dependency := range *module.Dependencies {
+		if dependency.Type == dependencyType && dependency.Id == dependencyId {
+			return true
+		}
+	}
+
+	return false
 }
 
 // ProjectModuleDiscovery contains info on the files used to discover the module
