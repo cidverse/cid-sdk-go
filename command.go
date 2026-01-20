@@ -1,5 +1,7 @@
 package cidsdk
 
+import "fmt"
+
 // ExecuteCommandRequest defines model for ExecuteCommandRequest.
 type ExecuteCommandRequest struct {
 	CaptureOutput bool              `json:"capture_output,omitempty"` // CaptureOutput capture and return both stdout and stderr
@@ -41,12 +43,20 @@ func (sdk SDK) ExecuteCommand(req ExecuteCommandRequest) (*ExecuteCommandRespons
 		SetResult(&ExecuteCommandResponse{}).
 		SetError(&APIError{}).
 		Post("/v1/command/execute")
-
 	if err != nil {
 		return nil, err
-	} else if resp.IsSuccess() {
-		return resp.Result().(*ExecuteCommandResponse), nil
-	} else {
-		return nil, resp.Error().(*APIError)
 	}
+
+	if resp.IsSuccess() {
+		res, ok := resp.Result().(*ExecuteCommandResponse)
+		if !ok {
+			return nil, fmt.Errorf("invalid response type")
+		}
+		return res, nil
+	}
+	apiErr, ok := resp.Error().(*APIError)
+	if !ok {
+		return nil, fmt.Errorf("invalid API error response: %s", resp.String())
+	}
+	return nil, apiErr
 }
